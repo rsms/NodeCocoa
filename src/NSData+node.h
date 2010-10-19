@@ -1,0 +1,2 @@
+@interface NSData (node)
+@end

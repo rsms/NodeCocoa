@@ -1,0 +1,6 @@
+#ifdef __cplusplus
+  #import <node.h> // includes v8.h
+#endif
+#ifdef __OBJC__
+  #import <Cocoa/Cocoa.h>
+#endif

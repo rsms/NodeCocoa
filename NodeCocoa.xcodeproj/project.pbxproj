@@ -1,0 +1,806 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3A14685A126DB75B00992F94 /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A146859126DB75800992F94 /* libffi.a */; };
+		3A7CA68D126663A0002158A5 /* NSData+node.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA6881266638F002158A5 /* NSData+node.mm */; };
+		3A7CA68E126663A0002158A5 /* NSObject+v8.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA68A1266638F002158A5 /* NSObject+v8.mm */; };
+		3A7CA6A81266649C002158A5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CA6A71266649C002158A5 /* MainMenu.xib */; };
+		3A7CA6AB126664F4002158A5 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CA6AA126664EB002158A5 /* main.js */; };
+		3A7CA6AE1266F55D002158A5 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA6AD1266F55D002158A5 /* AppDelegate.mm */; };
+		3A7CA6E31266F820002158A5 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA69812666440002158A5 /* main.mm */; };
+		3A7CA7131266F98A002158A5 /* mplus-1m-light.ttf in Copy fonts */ = {isa = PBXBuildFile; fileRef = 3A7CA7101266F965002158A5 /* mplus-1m-light.ttf */; };
+		3A835703126A5E8C0058174F /* node_buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356EE126A5E8C0058174F /* node_buffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835704126A5E8C0058174F /* node_cares.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356EF126A5E8C0058174F /* node_cares.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835705126A5E8C0058174F /* node_child_process.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356F0126A5E8C0058174F /* node_child_process.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835706126A5E8C0058174F /* node_constants.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356F1126A5E8C0058174F /* node_constants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835707126A5E8C0058174F /* node_crypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356F2126A5E8C0058174F /* node_crypto.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835708126A5E8C0058174F /* node_events.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356F3126A5E8C0058174F /* node_events.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835709126A5E8C0058174F /* node_extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356F4126A5E8C0058174F /* node_extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A83570A126A5E8C0058174F /* node_file.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356F5126A5E8C0058174F /* node_file.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A83570B126A5E8C0058174F /* node_http_parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356F6126A5E8C0058174F /* node_http_parser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A83570C126A5E8C0058174F /* node_idle_watcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356F7126A5E8C0058174F /* node_idle_watcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A83570D126A5E8C0058174F /* node_io_watcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356F8126A5E8C0058174F /* node_io_watcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A83570E126A5E8C0058174F /* node_net.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356F9126A5E8C0058174F /* node_net.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A83570F126A5E8C0058174F /* node_object_wrap.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356FA126A5E8C0058174F /* node_object_wrap.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835710126A5E8C0058174F /* node_script.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356FB126A5E8C0058174F /* node_script.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835711126A5E8C0058174F /* node_signal_watcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356FC126A5E8C0058174F /* node_signal_watcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835712126A5E8C0058174F /* node_stat_watcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356FD126A5E8C0058174F /* node_stat_watcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835713126A5E8C0058174F /* node_stdio.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356FE126A5E8C0058174F /* node_stdio.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835714126A5E8C0058174F /* node_timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8356FF126A5E8C0058174F /* node_timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835716126A5E8C0058174F /* node.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A835701126A5E8C0058174F /* node.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835727126A5EC90058174F /* eio.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A835726126A5EC90058174F /* eio.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A83572A126A5EE90058174F /* ev.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A835729126A5EE90058174F /* ev.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835731126A5F040058174F /* v8-debug.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A83572E126A5F040058174F /* v8-debug.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835732126A5F040058174F /* v8-profiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A83572F126A5F040058174F /* v8-profiler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A835733126A5F040058174F /* v8.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A835730126A5F040058174F /* v8.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3ABA18F6126C50F000753966 /* NSObjectProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3ABA18F4126C50F000753966 /* NSObjectProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3ABA18F7126C50F000753966 /* NSObjectProxy.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3ABA18F5126C50F000753966 /* NSObjectProxy.mm */; };
+		3ABA1991126C642200753966 /* NodeJSProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3ABA198F126C642200753966 /* NodeJSProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3ABA1992126C642200753966 /* NodeJSProxy.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3ABA1990126C642200753966 /* NodeJSProxy.mm */; };
+		3AE7CC1F1269C6DC00FEB40E /* NodeJS.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AE7CC1D1269C6DC00FEB40E /* NodeJS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3AE7CC201269C6DC00FEB40E /* NodeJS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC1E1269C6DC00FEB40E /* NodeJS.mm */; };
+		3AE7CC691269CA2A00FEB40E /* NodeCocoa.framework in Copy frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NodeCocoa.framework */; };
+		3AE7CC821269CB6400FEB40E /* libnode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CC801269CB6400FEB40E /* libnode.a */; };
+		3AE7CC831269CB6400FEB40E /* libv8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CC811269CB6400FEB40E /* libv8.a */; };
+		3AE7CC941269CBA500FEB40E /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC891269CBA500FEB40E /* NSObject+SBJSON.m */; };
+		3AE7CC961269CBA500FEB40E /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC8B1269CBA500FEB40E /* NSString+SBJSON.m */; };
+		3AE7CC981269CBA500FEB40E /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC8D1269CBA500FEB40E /* SBJsonBase.m */; };
+		3AE7CC9A1269CBA500FEB40E /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC8F1269CBA500FEB40E /* SBJsonParser.m */; };
+		3AE7CC9C1269CBA500FEB40E /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC911269CBA500FEB40E /* SBJsonWriter.m */; };
+		3AE7CCBF1269CC9400FEB40E /* NodeCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NodeCocoa.framework */; };
+		3AE7CD801269D75900FEB40E /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CD7F1269D75900FEB40E /* libssl.dylib */; };
+		3AE7CD821269D76B00FEB40E /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CD7F1269D75900FEB40E /* libssl.dylib */; };
+		3AE7CD891269D77E00FEB40E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CD881269D77E00FEB40E /* Carbon.framework */; };
+		3AE7CD8E1269D78700FEB40E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CD881269D77E00FEB40E /* Carbon.framework */; };
+		3AE7CE4C1269D79700FEB40E /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE4B1269D79700FEB40E /* libcrypto.dylib */; };
+		3AE7CE4E1269D79B00FEB40E /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE4B1269D79700FEB40E /* libcrypto.dylib */; };
+		3AE7CE531269D7AD00FEB40E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE521269D7AD00FEB40E /* libz.dylib */; };
+		3AE7CE551269D7B000FEB40E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE521269D7AD00FEB40E /* libz.dylib */; };
+		3AE7CE5A1269D7C000FEB40E /* libdl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE591269D7C000FEB40E /* libdl.dylib */; };
+		3AE7CE5C1269D7C300FEB40E /* libdl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE591269D7C000FEB40E /* libdl.dylib */; };
+		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3A1467EA126DB19A00992F94 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A1467E7126DB19500992F94;
+			remoteInfo = libffi;
+		};
+		3AE7CC3E1269C77800FEB40E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = NodeThread;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3A7CA7151266F9A8002158A5 /* Copy fonts */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = fonts;
+			dstSubfolderSpec = 7;
+			files = (
+				3A7CA7131266F98A002158A5 /* mplus-1m-light.ttf in Copy fonts */,
+			);
+			name = "Copy fonts";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3AE7CC6B1269CA4800FEB40E /* Copy frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3AE7CC691269CA2A00FEB40E /* NodeCocoa.framework in Copy frameworks */,
+			);
+			name = "Copy frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		3A146859126DB75800992F94 /* libffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libffi.a; path = deps/libffi/.libs/libffi.a; sourceTree = "<group>"; };
+		3A7CA6861266638F002158A5 /* NS+node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NS+node.h"; sourceTree = "<group>"; };
+		3A7CA6871266638F002158A5 /* NSData+node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+node.h"; sourceTree = "<group>"; };
+		3A7CA6881266638F002158A5 /* NSData+node.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSData+node.mm"; sourceTree = "<group>"; };
+		3A7CA6891266638F002158A5 /* NSObject+v8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+v8.h"; sourceTree = "<group>"; };
+		3A7CA68A1266638F002158A5 /* NSObject+v8.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSObject+v8.mm"; sourceTree = "<group>"; };
+		3A7CA68B1266638F002158A5 /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
+		3A7CA69712666440002158A5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A7CA69812666440002158A5 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		3A7CA69D12666456002158A5 /* Node Console.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Node Console.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A7CA6A71266649C002158A5 /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
+		3A7CA6AA126664EB002158A5 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
+		3A7CA6AC1266F55D002158A5 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		3A7CA6AD1266F55D002158A5 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
+		3A7CA7101266F965002158A5 /* mplus-1m-light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mplus-1m-light.ttf"; sourceTree = "<group>"; };
+		3A8356EE126A5E8C0058174F /* node_buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_buffer.h; path = deps/node/src/node_buffer.h; sourceTree = SOURCE_ROOT; };
+		3A8356EF126A5E8C0058174F /* node_cares.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_cares.h; path = deps/node/src/node_cares.h; sourceTree = SOURCE_ROOT; };
+		3A8356F0126A5E8C0058174F /* node_child_process.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_child_process.h; path = deps/node/src/node_child_process.h; sourceTree = SOURCE_ROOT; };
+		3A8356F1126A5E8C0058174F /* node_constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_constants.h; path = deps/node/src/node_constants.h; sourceTree = SOURCE_ROOT; };
+		3A8356F2126A5E8C0058174F /* node_crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_crypto.h; path = deps/node/src/node_crypto.h; sourceTree = SOURCE_ROOT; };
+		3A8356F3126A5E8C0058174F /* node_events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_events.h; path = deps/node/src/node_events.h; sourceTree = SOURCE_ROOT; };
+		3A8356F4126A5E8C0058174F /* node_extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_extensions.h; path = deps/node/src/node_extensions.h; sourceTree = SOURCE_ROOT; };
+		3A8356F5126A5E8C0058174F /* node_file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_file.h; path = deps/node/src/node_file.h; sourceTree = SOURCE_ROOT; };
+		3A8356F6126A5E8C0058174F /* node_http_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_http_parser.h; path = deps/node/src/node_http_parser.h; sourceTree = SOURCE_ROOT; };
+		3A8356F7126A5E8C0058174F /* node_idle_watcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_idle_watcher.h; path = deps/node/src/node_idle_watcher.h; sourceTree = SOURCE_ROOT; };
+		3A8356F8126A5E8C0058174F /* node_io_watcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_io_watcher.h; path = deps/node/src/node_io_watcher.h; sourceTree = SOURCE_ROOT; };
+		3A8356F9126A5E8C0058174F /* node_net.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_net.h; path = deps/node/src/node_net.h; sourceTree = SOURCE_ROOT; };
+		3A8356FA126A5E8C0058174F /* node_object_wrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_object_wrap.h; path = deps/node/src/node_object_wrap.h; sourceTree = SOURCE_ROOT; };
+		3A8356FB126A5E8C0058174F /* node_script.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_script.h; path = deps/node/src/node_script.h; sourceTree = SOURCE_ROOT; };
+		3A8356FC126A5E8C0058174F /* node_signal_watcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_signal_watcher.h; path = deps/node/src/node_signal_watcher.h; sourceTree = SOURCE_ROOT; };
+		3A8356FD126A5E8C0058174F /* node_stat_watcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_stat_watcher.h; path = deps/node/src/node_stat_watcher.h; sourceTree = SOURCE_ROOT; };
+		3A8356FE126A5E8C0058174F /* node_stdio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_stdio.h; path = deps/node/src/node_stdio.h; sourceTree = SOURCE_ROOT; };
+		3A8356FF126A5E8C0058174F /* node_timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node_timer.h; path = deps/node/src/node_timer.h; sourceTree = SOURCE_ROOT; };
+		3A835701126A5E8C0058174F /* node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = node.h; path = deps/node/src/node.h; sourceTree = SOURCE_ROOT; };
+		3A835726126A5EC90058174F /* eio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = eio.h; path = deps/node/deps/libeio/eio.h; sourceTree = "<group>"; };
+		3A835729126A5EE90058174F /* ev.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ev.h; path = deps/node/deps/libev/ev.h; sourceTree = "<group>"; };
+		3A83572E126A5F040058174F /* v8-debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "v8-debug.h"; path = "deps/node/deps/v8/include/v8-debug.h"; sourceTree = "<group>"; };
+		3A83572F126A5F040058174F /* v8-profiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "v8-profiler.h"; path = "deps/node/deps/v8/include/v8-profiler.h"; sourceTree = "<group>"; };
+		3A835730126A5F040058174F /* v8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = v8.h; path = deps/node/deps/v8/include/v8.h; sourceTree = "<group>"; };
+		3ABA18F4126C50F000753966 /* NSObjectProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectProxy.h; sourceTree = "<group>"; };
+		3ABA18F5126C50F000753966 /* NSObjectProxy.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSObjectProxy.mm; sourceTree = "<group>"; };
+		3ABA198F126C642200753966 /* NodeJSProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJSProxy.h; sourceTree = "<group>"; };
+		3ABA1990126C642200753966 /* NodeJSProxy.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJSProxy.mm; sourceTree = "<group>"; };
+		3AE7CC1D1269C6DC00FEB40E /* NodeJS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJS.h; sourceTree = "<group>"; };
+		3AE7CC1E1269C6DC00FEB40E /* NodeJS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJS.mm; sourceTree = "<group>"; };
+		3AE7CC801269CB6400FEB40E /* libnode.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnode.a; path = deps/node/build/default/libnode.a; sourceTree = "<group>"; };
+		3AE7CC811269CB6400FEB40E /* libv8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8.a; path = deps/node/build/default/libv8.a; sourceTree = "<group>"; };
+		3AE7CC871269CBA500FEB40E /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
+		3AE7CC881269CBA500FEB40E /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
+		3AE7CC891269CBA500FEB40E /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
+		3AE7CC8A1269CBA500FEB40E /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
+		3AE7CC8B1269CBA500FEB40E /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBJSON.m"; sourceTree = "<group>"; };
+		3AE7CC8C1269CBA500FEB40E /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonBase.h; sourceTree = "<group>"; };
+		3AE7CC8D1269CBA500FEB40E /* SBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonBase.m; sourceTree = "<group>"; };
+		3AE7CC8E1269CBA500FEB40E /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
+		3AE7CC8F1269CBA500FEB40E /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
+		3AE7CC901269CBA500FEB40E /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		3AE7CC911269CBA500FEB40E /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
+		3AE7CD7F1269D75900FEB40E /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.dylib; path = usr/lib/libssl.dylib; sourceTree = SDKROOT; };
+		3AE7CD881269D77E00FEB40E /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		3AE7CE4B1269D79700FEB40E /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
+		3AE7CE521269D7AD00FEB40E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		3AE7CE591269D7C000FEB40E /* libdl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdl.dylib; path = usr/lib/libdl.dylib; sourceTree = SDKROOT; };
+		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8DC2EF5B0486A6940098B216 /* NodeCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NodeCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3A7CA69B12666456002158A5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3AE7CCBF1269CC9400FEB40E /* NodeCocoa.framework in Frameworks */,
+				3AE7CD801269D75900FEB40E /* libssl.dylib in Frameworks */,
+				3AE7CD891269D77E00FEB40E /* Carbon.framework in Frameworks */,
+				3AE7CE4C1269D79700FEB40E /* libcrypto.dylib in Frameworks */,
+				3AE7CE531269D7AD00FEB40E /* libz.dylib in Frameworks */,
+				3AE7CE5A1269D7C000FEB40E /* libdl.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DC2EF560486A6940098B216 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A14685A126DB75B00992F94 /* libffi.a in Frameworks */,
+				3AE7CC831269CB6400FEB40E /* libv8.a in Frameworks */,
+				3AE7CC821269CB6400FEB40E /* libnode.a in Frameworks */,
+				3AE7CE5C1269D7C300FEB40E /* libdl.dylib in Frameworks */,
+				3AE7CE551269D7B000FEB40E /* libz.dylib in Frameworks */,
+				3AE7CE4E1269D79B00FEB40E /* libcrypto.dylib in Frameworks */,
+				3AE7CD8E1269D78700FEB40E /* Carbon.framework in Frameworks */,
+				8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */,
+				3AE7CD821269D76B00FEB40E /* libssl.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DC2EF5B0486A6940098B216 /* NodeCocoa.framework */,
+				3A7CA69D12666456002158A5 /* Node Console.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* NodeThread */ = {
+			isa = PBXGroup;
+			children = (
+				3A7CA69612666440002158A5 /* console-app */,
+				3A7CA6821266638F002158A5 /* src */,
+				3A835719126A5EA50058174F /* deps (include) */,
+				089C1665FE841158C02AAC07 /* Resources */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = NodeThread;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				3AE7CD7F1269D75900FEB40E /* libssl.dylib */,
+				3AE7CC801269CB6400FEB40E /* libnode.a */,
+				3AE7CC811269CB6400FEB40E /* libv8.a */,
+				3A146859126DB75800992F94 /* libffi.a */,
+				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
+				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
+				3AE7CD881269D77E00FEB40E /* Carbon.framework */,
+				3AE7CE4B1269D79700FEB40E /* libcrypto.dylib */,
+				3AE7CE521269D7AD00FEB40E /* libz.dylib */,
+				3AE7CE591269D7C000FEB40E /* libdl.dylib */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C1665FE841158C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8DC2EF5A0486A6940098B216 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0867D6A5FE840307C02AAC07 /* AppKit.framework */,
+				D2F7E79907B2D74100F64583 /* CoreData.framework */,
+				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		3A7CA6821266638F002158A5 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				3A7CA68B1266638F002158A5 /* prefix.pch */,
+				3AE7CC1D1269C6DC00FEB40E /* NodeJS.h */,
+				3AE7CC1E1269C6DC00FEB40E /* NodeJS.mm */,
+				3ABA198F126C642200753966 /* NodeJSProxy.h */,
+				3ABA1990126C642200753966 /* NodeJSProxy.mm */,
+				3ABA18F4126C50F000753966 /* NSObjectProxy.h */,
+				3ABA18F5126C50F000753966 /* NSObjectProxy.mm */,
+				3A7CA6861266638F002158A5 /* NS+node.h */,
+				3A7CA6871266638F002158A5 /* NSData+node.h */,
+				3A7CA6881266638F002158A5 /* NSData+node.mm */,
+				3A7CA6891266638F002158A5 /* NSObject+v8.h */,
+				3A7CA68A1266638F002158A5 /* NSObject+v8.mm */,
+				3AE7CC861269CBA500FEB40E /* json */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		3A7CA69612666440002158A5 /* console-app */ = {
+			isa = PBXGroup;
+			children = (
+				3A7CA7101266F965002158A5 /* mplus-1m-light.ttf */,
+				3A7CA69712666440002158A5 /* Info.plist */,
+				3A7CA6A71266649C002158A5 /* MainMenu.xib */,
+				3A7CA6AA126664EB002158A5 /* main.js */,
+				3A7CA69812666440002158A5 /* main.mm */,
+				3A7CA6AC1266F55D002158A5 /* AppDelegate.h */,
+				3A7CA6AD1266F55D002158A5 /* AppDelegate.mm */,
+			);
+			path = "console-app";
+			sourceTree = "<group>";
+		};
+		3A835718126A5E950058174F /* node */ = {
+			isa = PBXGroup;
+			children = (
+				3A8356EE126A5E8C0058174F /* node_buffer.h */,
+				3A8356EF126A5E8C0058174F /* node_cares.h */,
+				3A8356F0126A5E8C0058174F /* node_child_process.h */,
+				3A8356F1126A5E8C0058174F /* node_constants.h */,
+				3A8356F2126A5E8C0058174F /* node_crypto.h */,
+				3A8356F3126A5E8C0058174F /* node_events.h */,
+				3A8356F4126A5E8C0058174F /* node_extensions.h */,
+				3A8356F5126A5E8C0058174F /* node_file.h */,
+				3A8356F6126A5E8C0058174F /* node_http_parser.h */,
+				3A8356F7126A5E8C0058174F /* node_idle_watcher.h */,
+				3A8356F8126A5E8C0058174F /* node_io_watcher.h */,
+				3A8356F9126A5E8C0058174F /* node_net.h */,
+				3A8356FA126A5E8C0058174F /* node_object_wrap.h */,
+				3A8356FB126A5E8C0058174F /* node_script.h */,
+				3A8356FC126A5E8C0058174F /* node_signal_watcher.h */,
+				3A8356FD126A5E8C0058174F /* node_stat_watcher.h */,
+				3A8356FE126A5E8C0058174F /* node_stdio.h */,
+				3A8356FF126A5E8C0058174F /* node_timer.h */,
+				3A835701126A5E8C0058174F /* node.h */,
+			);
+			name = node;
+			path = src;
+			sourceTree = "<group>";
+		};
+		3A835719126A5EA50058174F /* deps (include) */ = {
+			isa = PBXGroup;
+			children = (
+				3A835729126A5EE90058174F /* ev.h */,
+				3A835726126A5EC90058174F /* eio.h */,
+				3A835734126A5F070058174F /* v8 */,
+				3A835718126A5E950058174F /* node */,
+			);
+			name = "deps (include)";
+			sourceTree = "<group>";
+		};
+		3A835734126A5F070058174F /* v8 */ = {
+			isa = PBXGroup;
+			children = (
+				3A83572E126A5F040058174F /* v8-debug.h */,
+				3A83572F126A5F040058174F /* v8-profiler.h */,
+				3A835730126A5F040058174F /* v8.h */,
+			);
+			name = v8;
+			sourceTree = "<group>";
+		};
+		3AE7CC861269CBA500FEB40E /* json */ = {
+			isa = PBXGroup;
+			children = (
+				3AE7CC871269CBA500FEB40E /* JSON.h */,
+				3AE7CC881269CBA500FEB40E /* NSObject+SBJSON.h */,
+				3AE7CC891269CBA500FEB40E /* NSObject+SBJSON.m */,
+				3AE7CC8A1269CBA500FEB40E /* NSString+SBJSON.h */,
+				3AE7CC8B1269CBA500FEB40E /* NSString+SBJSON.m */,
+				3AE7CC8C1269CBA500FEB40E /* SBJsonBase.h */,
+				3AE7CC8D1269CBA500FEB40E /* SBJsonBase.m */,
+				3AE7CC8E1269CBA500FEB40E /* SBJsonParser.h */,
+				3AE7CC8F1269CBA500FEB40E /* SBJsonParser.m */,
+				3AE7CC901269CBA500FEB40E /* SBJsonWriter.h */,
+				3AE7CC911269CBA500FEB40E /* SBJsonWriter.m */,
+			);
+			name = json;
+			path = "deps/json-framework/Classes";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		8DC2EF500486A6940098B216 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3ABA1991126C642200753966 /* NodeJSProxy.h in Headers */,
+				3ABA18F6126C50F000753966 /* NSObjectProxy.h in Headers */,
+				3AE7CC1F1269C6DC00FEB40E /* NodeJS.h in Headers */,
+				3A835703126A5E8C0058174F /* node_buffer.h in Headers */,
+				3A835704126A5E8C0058174F /* node_cares.h in Headers */,
+				3A835705126A5E8C0058174F /* node_child_process.h in Headers */,
+				3A835706126A5E8C0058174F /* node_constants.h in Headers */,
+				3A835707126A5E8C0058174F /* node_crypto.h in Headers */,
+				3A835708126A5E8C0058174F /* node_events.h in Headers */,
+				3A835709126A5E8C0058174F /* node_extensions.h in Headers */,
+				3A83570A126A5E8C0058174F /* node_file.h in Headers */,
+				3A83570B126A5E8C0058174F /* node_http_parser.h in Headers */,
+				3A83570C126A5E8C0058174F /* node_idle_watcher.h in Headers */,
+				3A83570D126A5E8C0058174F /* node_io_watcher.h in Headers */,
+				3A83570E126A5E8C0058174F /* node_net.h in Headers */,
+				3A83570F126A5E8C0058174F /* node_object_wrap.h in Headers */,
+				3A835710126A5E8C0058174F /* node_script.h in Headers */,
+				3A835711126A5E8C0058174F /* node_signal_watcher.h in Headers */,
+				3A835712126A5E8C0058174F /* node_stat_watcher.h in Headers */,
+				3A835713126A5E8C0058174F /* node_stdio.h in Headers */,
+				3A835714126A5E8C0058174F /* node_timer.h in Headers */,
+				3A835716126A5E8C0058174F /* node.h in Headers */,
+				3A835727126A5EC90058174F /* eio.h in Headers */,
+				3A83572A126A5EE90058174F /* ev.h in Headers */,
+				3A835731126A5F040058174F /* v8-debug.h in Headers */,
+				3A835732126A5F040058174F /* v8-profiler.h in Headers */,
+				3A835733126A5F040058174F /* v8.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXLegacyTarget section */
+		3A1467E7126DB19500992F94 /* libffi */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION) -j --silent ";
+			buildConfigurationList = 3A1467EC126DB1B800992F94 /* Build configuration list for PBXLegacyTarget "libffi" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = deps/libffi;
+			dependencies = (
+			);
+			name = libffi;
+			passBuildSettingsInEnvironment = 1;
+			productName = libffi;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXNativeTarget section */
+		3A7CA69C12666456002158A5 /* Node Console */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A7CA6A212666456002158A5 /* Build configuration list for PBXNativeTarget "Node Console" */;
+			buildPhases = (
+				3A7CA69912666456002158A5 /* Resources */,
+				3A7CA69A12666456002158A5 /* Sources */,
+				3A7CA69B12666456002158A5 /* Frameworks */,
+				3A7CA7151266F9A8002158A5 /* Copy fonts */,
+				3AE7CC6B1269CA4800FEB40E /* Copy frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3AE7CC3F1269C77800FEB40E /* PBXTargetDependency */,
+			);
+			name = "Node Console";
+			productName = "NodeThread Example";
+			productReference = 3A7CA69D12666456002158A5 /* Node Console.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8DC2EF4F0486A6940098B216 /* NodeCocoa */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "NodeCocoa" */;
+			buildPhases = (
+				3A1467F5126DB21E00992F94 /* Fix libffi.a */,
+				8DC2EF500486A6940098B216 /* Headers */,
+				3ABA182E126C2F6900753966 /* Transpose header search paths */,
+				8DC2EF520486A6940098B216 /* Resources */,
+				8DC2EF540486A6940098B216 /* Sources */,
+				8DC2EF560486A6940098B216 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3A1467EB126DB19A00992F94 /* PBXTargetDependency */,
+			);
+			name = NodeCocoa;
+			productInstallPath = "$(HOME)/Library/Frameworks";
+			productName = NodeThread;
+			productReference = 8DC2EF5B0486A6940098B216 /* NodeCocoa.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "NodeCocoa" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* NodeThread */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3A1467E7126DB19500992F94 /* libffi */,
+				8DC2EF4F0486A6940098B216 /* NodeCocoa */,
+				3A7CA69C12666456002158A5 /* Node Console */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3A7CA69912666456002158A5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A7CA6AB126664F4002158A5 /* main.js in Resources */,
+				3A7CA6A81266649C002158A5 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DC2EF520486A6940098B216 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3A1467F5126DB21E00992F94 /* Fix libffi.a */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(PROJECT_DIR)/deps/libffi/.libs/libffi.a",
+			);
+			name = "Fix libffi.a";
+			outputPaths = (
+				"$(PROJECT_DIR)/deps/libffi/libffi.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp -v \"$PROJECT_DIR/deps/libffi/.libs/libffi.a\" \"$PROJECT_DIR/deps/libffi/libffi.a\"\nrm -fv \"$PROJECT_DIR/deps/libffi/.libs/\"*.dylib";
+		};
+		3ABA182E126C2F6900753966 /* Transpose header search paths */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Transpose header search paths";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "PATH=\"$PATH:/usr/local/bin:/opt/local/bin\"\nnode \"$SRCROOT/scripts/copy-headers-to-framework.js\"\nexit $?\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3A7CA69A12666456002158A5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A7CA6E31266F820002158A5 /* main.mm in Sources */,
+				3A7CA6AE1266F55D002158A5 /* AppDelegate.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DC2EF540486A6940098B216 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A7CA68D126663A0002158A5 /* NSData+node.mm in Sources */,
+				3A7CA68E126663A0002158A5 /* NSObject+v8.mm in Sources */,
+				3AE7CC201269C6DC00FEB40E /* NodeJS.mm in Sources */,
+				3AE7CC941269CBA500FEB40E /* NSObject+SBJSON.m in Sources */,
+				3AE7CC961269CBA500FEB40E /* NSString+SBJSON.m in Sources */,
+				3AE7CC981269CBA500FEB40E /* SBJsonBase.m in Sources */,
+				3AE7CC9A1269CBA500FEB40E /* SBJsonParser.m in Sources */,
+				3AE7CC9C1269CBA500FEB40E /* SBJsonWriter.m in Sources */,
+				3ABA18F7126C50F000753966 /* NSObjectProxy.mm in Sources */,
+				3ABA1992126C642200753966 /* NodeJSProxy.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3A1467EB126DB19A00992F94 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A1467E7126DB19500992F94 /* libffi */;
+			targetProxy = 3A1467EA126DB19A00992F94 /* PBXContainerItemProxy */;
+		};
+		3AE7CC3F1269C77800FEB40E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DC2EF4F0486A6940098B216 /* NodeCocoa */;
+			targetProxy = 3AE7CC3E1269C77800FEB40E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91AE08733DA50010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = src/prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "EV_MULTIPLICITY=0";
+				HEADER_SEARCH_PATHS = (
+					deps/node/deps/libeio,
+					deps/node/deps/libev,
+					deps/node/deps/v8/include,
+					deps/node/src,
+				);
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "@rpath";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/deps/node/build/default\"",
+					"\"$(SRCROOT)/deps/libffi/.libs\"",
+					"\"$(SRCROOT)/deps/libffi\"",
+				);
+				PRODUCT_NAME = NodeCocoa;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		1DEB91AF08733DA50010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = src/prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"NDEBUG=1",
+					"EV_MULTIPLICITY=0",
+				);
+				HEADER_SEARCH_PATHS = (
+					deps/node/deps/libeio,
+					deps/node/deps/libev,
+					deps/node/deps/v8/include,
+					deps/node/src,
+				);
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "@rpath";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/deps/node/build/default\"",
+					"\"$(SRCROOT)/deps/libffi/.libs\"",
+					"\"$(SRCROOT)/deps/libffi\"",
+				);
+				PRODUCT_NAME = NodeCocoa;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		1DEB91B208733DA50010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		1DEB91B308733DA50010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		3A1467E8126DB19600992F94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = ffi;
+			};
+			name = Debug;
+		};
+		3A1467E9126DB19600992F94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = libffi;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		3A7CA6A012666456002158A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				HEADER_SEARCH_PATHS = "$(BUILD_ROOT)/$(BUILD_STYLE)/NodeCocoa.framework/Versions/A/Headers";
+				INFOPLIST_FILE = "console-app/Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Node Console";
+			};
+			name = Debug;
+		};
+		3A7CA6A112666456002158A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				HEADER_SEARCH_PATHS = "$(BUILD_ROOT)/$(BUILD_STYLE)/NodeCocoa.framework/Versions/A/Headers";
+				INFOPLIST_FILE = "console-app/Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Node Console";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "NodeCocoa" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91AE08733DA50010E9CD /* Debug */,
+				1DEB91AF08733DA50010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "NodeCocoa" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91B208733DA50010E9CD /* Debug */,
+				1DEB91B308733DA50010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A1467EC126DB1B800992F94 /* Build configuration list for PBXLegacyTarget "libffi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A1467E8126DB19600992F94 /* Debug */,
+				3A1467E9126DB19600992F94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A7CA6A212666456002158A5 /* Build configuration list for PBXNativeTarget "Node Console" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A7CA6A012666456002158A5 /* Debug */,
+				3A7CA6A112666456002158A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}
