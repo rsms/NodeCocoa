@@ -5,8 +5,8 @@ using namespace v8;
 
 @implementation AppDelegate
 
+static Persistent<Function> kSysInspectFunction;
 static NSString* kLinePrefixFormat = @"HH:mm:ss > ";
-static NSFont* kDefaultFont = nil;
 static NSColor* kInputLineColor = nil;
 static NSAttributedString* kNewlineAttrStr = nil;
 static NSDictionary *kInputStringAttributes,
@@ -14,7 +14,8 @@ static NSDictionary *kInputStringAttributes,
                     *kResultStringAttributes,
                     *kStdoutStringAttributes,
                     *kStderrStringAttributes,
-                    *kErrorStringAttributes;
+                    *kErrorStringAttributes,
+                    *kMetaStringAttributes;
 
 #define RGBA(r,g,b,a) \
   [NSColor colorWithDeviceRed:(r) green:(g) blue:(b) alpha:(a)]
@@ -23,52 +24,63 @@ static NSDictionary *kInputStringAttributes,
             textView = textView_,
             scrollView = scrollView_,
             outputTextView = outputTextView_,
-            outputScrollView = outputScrollView_;
+            outputScrollView = outputScrollView_,
+            uncommitedHistoryEntry = uncommitedHistoryEntry_;
 
 + (void)load {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   
   // Font
-  kDefaultFont = [NSFont fontWithName:@"M+ 1m light" size:13.0];
-  if (!kDefaultFont) kDefaultFont = [NSFont userFixedPitchFontOfSize:13.0];
-  kDefaultFont = [kDefaultFont retain];
+  NSFont* fontNormal = [NSFont fontWithName:@"M+ 1m light" size:13.0];
+  if (fontNormal) {
+    [NSFont setUserFixedPitchFont:fontNormal];
+  } else {
+    fontNormal = [NSFont userFixedPitchFontOfSize:13.0];
+  }
+  NSFont* fontSmall = [NSFont userFixedPitchFontOfSize:11.0];
   // Newline
   kNewlineAttrStr = [[NSAttributedString alloc] initWithString:@"\n"];
   // Input line color
   kInputLineColor = [[NSColor colorWithDeviceWhite:1.0 alpha:0.8] retain];
   // Input prefix attributes
   kLinePrefixAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-                            kDefaultFont, NSFontAttributeName,
+                            fontNormal, NSFontAttributeName,
                             [NSColor colorWithDeviceWhite:1.0 alpha:0.4],
                             NSForegroundColorAttributeName,
                             nil];
   // Input text attrs
   kInputStringAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-                             kDefaultFont, NSFontAttributeName,
+                             fontNormal, NSFontAttributeName,
                              kInputLineColor, NSForegroundColorAttributeName,
                              nil];
-  // Returned result text attrs
+  // Input result text attrs
   kResultStringAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-                             kDefaultFont, NSFontAttributeName,
+                             fontNormal, NSFontAttributeName,
                              RGBA(0.7, 0.9, 1.0, 0.8),
+                                NSForegroundColorAttributeName,
+                             nil];
+  // Error text attrs
+  kErrorStringAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
+                             fontNormal, NSFontAttributeName,
+                             RGBA(1.0, 0.5, 0.5, 0.9),
                                 NSForegroundColorAttributeName,
                              nil];
   // Stdout text attrs
   kStdoutStringAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-                             kDefaultFont, NSFontAttributeName,
+                             fontSmall, NSFontAttributeName,
                              RGBA(0.8, 1.0, 0.8, 0.8),
                                 NSForegroundColorAttributeName,
                              nil];
   // Stdout text attrs
   kStderrStringAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-                             kDefaultFont, NSFontAttributeName,
+                             fontSmall, NSFontAttributeName,
                              RGBA(1.0, 0.8, 0.8, 0.8),
                                 NSForegroundColorAttributeName,
                              nil];
-  // Error text attrs
-  kErrorStringAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-                             kDefaultFont, NSFontAttributeName,
-                             RGBA(1.0, 0.5, 0.5, 0.9),
+  // Output meta text attrs
+  kMetaStringAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
+                             fontSmall, NSFontAttributeName,
+                             RGBA(1.0, 1.0, 1.0, 0.4),
                                 NSForegroundColorAttributeName,
                              nil];
   [pool drain];
@@ -85,16 +97,15 @@ static NSDictionary *kInputStringAttributes,
 - (void)awakeFromNib {
   // Setup NSTextView
   [textView_ setTextColor:kInputLineColor];
-  [textView_ setFont:kDefaultFont];
+  [textView_ setFont:[NSFont userFixedPitchFontOfSize:13.0]];
   [textView_ setTextContainerInset:NSMakeSize(2.0, 4.0)];
   [textView_ setDelegate:self];
-  NSTextStorage* textStorage = [textView_ textStorage];
-  [textStorage appendAttributedString:[isa linePrefix]];
-  [textStorage setDelegate:self];
+  [textView_.textStorage appendAttributedString:[isa linePrefix]];
+  [textView_.textStorage setDelegate:self];
   
   // setup output text view
   [outputTextView_ setTextColor:kInputLineColor];
-  [outputTextView_ setFont:kDefaultFont];
+  [outputTextView_ setFont:[NSFont userFixedPitchFontOfSize:11.0]];
   [outputTextView_ setTextContainerInset:NSMakeSize(2.0, 4.0)];
 }
 
@@ -104,28 +115,11 @@ static NSDictionary *kInputStringAttributes,
   [NodeJS setHostObject:self];
   
   // Get the global "process" object
-  Local<Object> global = Context::GetCurrent()->Global();
-  //Local<Object> global = [NodeJS mainContext]->Global();
-  Local<Object> process =
-      Local<Object>::Cast(global->Get(String::NewSymbol("process")));
-  /*
-  // Setup custom stdout
-  nodeStdoutPipe_ = [NSPipe pipe];
-  // use |ForceSet| since it's originally a read-only property
-  Local<Integer> fd =
-      Integer::New([[nodeStdoutPipe_ fileHandleForWriting] fileDescriptor]);
-  process->ForceSet(String::New("stdout"), fd);
+  Local<Object> process = Local<Object>::Cast(
+      Context::GetCurrent()->Global()->Get(String::NewSymbol("process")));
   
-  // Setup custom stderr
-  nodeStderrPipe_ = [NSPipe pipe];
-  // use |ForceSet| since it's originally a read-only property
-  Local<Integer> fd =
-      Integer::New([[nodeStderrPipe_ fileHandleForWriting] fileDescriptor]);
-  process->ForceSet(String::New("stderr"), fd);*/
-  
-  
-  // redirect stdout and stderr
-  nodeStdoutPipe_ = [NSPipe pipe];
+  // redirect stdout to a pipe
+  nodeStdoutPipe_ = [[NSPipe pipe] retain];
   NSFileHandle* pipeReadHandle = [nodeStdoutPipe_ fileHandleForReading];
   dup2([[nodeStdoutPipe_ fileHandleForWriting] fileDescriptor], fileno(stdout));
   [[NSNotificationCenter defaultCenter] addObserver:self
@@ -134,15 +128,21 @@ static NSDictionary *kInputStringAttributes,
       object:pipeReadHandle];
   [pipeReadHandle readInBackgroundAndNotify];
   
-  // hey, this will cause funky crashes...
-  /*nodeStderrPipe_ = [NSPipe pipe];
-  pipeReadHandle = [nodeStderrPipe_ fileHandleForReading];
+  // Alternative 1: Might cause funky crashes if NSLog is invoked at an
+  // inapropriate time (e.g. during reading of stderr).
+  nodeStderrPipe_ = [[NSPipe pipe] retain];
   dup2([[nodeStderrPipe_ fileHandleForWriting] fileDescriptor], fileno(stderr));
+  // Alternative 2: Redirect stderr using custom code in our main.js.
+  // Pass our stderr pipe fd to node as |process._stderrfd|
+  //nodeStderrPipe_ = [[NSPipe pipe] retain];
+  //int fd = [[nodeStderrPipe_ fileHandleForWriting] fileDescriptor];
+  //process->ForceSet(String::New("_stderrfd"), Integer::New(fd));
+  pipeReadHandle = [nodeStderrPipe_ fileHandleForReading];
   [[NSNotificationCenter defaultCenter] addObserver:self
       selector:@selector(stderrReadCompletion:)
       name:NSFileHandleReadCompletionNotification
       object:pipeReadHandle];
-  [pipeReadHandle readInBackgroundAndNotify];*/
+  [pipeReadHandle readInBackgroundAndNotify];
 }
 
 // string from data with best guess encoding (utf8, latin-1)
@@ -156,30 +156,29 @@ static NSDictionary *kInputStringAttributes,
   return [text autorelease];
 }
 
-- (void)stdoutReadCompletion:(NSNotification*)notification {
+- (void)appendOutput:(NSString*)text withAttributes:(NSDictionary*)attrs {
+  NSAttributedString* as =
+      [[NSAttributedString alloc] initWithString:text attributes:attrs];
+  static NSTextStorage* textStorage = nil;
+  if (!textStorage) textStorage = outputTextView_.textStorage;
+  [textStorage appendAttributedString:as];
+  [as release];
+}
+
+-(void)_handleOutput:(NSNotification*)notification attrs:(NSDictionary*)attrs {
   NSDictionary* info = [notification userInfo];
   NSData* data = [info objectForKey: NSFileHandleNotificationDataItem];
-  NSString* text = [self stringFromData:data];
-  NSAttributedString* as =
-      [[NSAttributedString alloc] initWithString:text
-                                      attributes:kStdoutStringAttributes];
-  [outputTextView_.textStorage appendAttributedString:as];
-  [outputTextView_.textStorage appendAttributedString:kNewlineAttrStr];
-  [as release];
+  [self appendOutput:[self stringFromData:data] withAttributes:attrs];
   [[notification object] readInBackgroundAndNotify];
+  [[outputScrollView_ documentView] scrollToEndOfDocument:self];
+}
+
+- (void)stdoutReadCompletion:(NSNotification*)notification {
+  [self _handleOutput:notification attrs:kStdoutStringAttributes];
 }
 
 - (void)stderrReadCompletion:(NSNotification*)notification {
-  NSDictionary* info = [notification userInfo];
-  NSData* data = [info objectForKey: NSFileHandleNotificationDataItem];
-  NSString* text = [self stringFromData:data];
-  NSAttributedString* as =
-      [[NSAttributedString alloc] initWithString:text
-                                      attributes:kStderrStringAttributes];
-  [outputTextView_.textStorage appendAttributedString:as];
-  [outputTextView_.textStorage appendAttributedString:kNewlineAttrStr];
-  [as release];
-  [[notification object] readInBackgroundAndNotify];
+  [self _handleOutput:notification attrs:kStderrStringAttributes];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
@@ -194,6 +193,14 @@ static NSDictionary *kInputStringAttributes,
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
   NSLog(@"applicationWillTerminate");
+  if (nodeStdoutPipe_) {
+    [nodeStdoutPipe_.fileHandleForWriting synchronizeFile];
+    [nodeStdoutPipe_.fileHandleForReading synchronizeFile];
+  }
+  if (nodeStderrPipe_) {
+    [nodeStderrPipe_.fileHandleForWriting synchronizeFile];
+    [nodeStderrPipe_.fileHandleForReading synchronizeFile];
+  }
 }
 
 - (void)appendLine:(NSString*)line {
@@ -213,21 +220,91 @@ static NSDictionary *kInputStringAttributes,
   [as release];
 }
 
-- (void)eval:(NSString*)line {
-  line = [line stringByTrimmingCharactersInSet:
-      [NSCharacterSet whitespaceCharacterSet]];
-  if ([line length] == 0) return;
-  line = [NSString stringWithFormat:@"require('sys').inspect(%@)", line];
-  HandleScope scope;
+- (void)appendToInputHistory:(NSString*)text {
+  NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
+  NSArray* history = [ud arrayForKey:@"history"];
+  if (!history || history.count == 0) {
+    history = [NSArray arrayWithObject:text];
+  } else {
+    // avoid consecutive duplicates
+    if ([[history lastObject] isEqualToString:text])
+      return;  // no need to modify history
+    // max 1000 items in history
+    if ([history count] >= 1000) {
+      history = [history subarrayWithRange:
+          NSMakeRange([history count]-999, 999)];
+    }
+    history = [history arrayByAddingObject:text];
+  }
+  [ud setObject:history forKey:@"history"];
+}
+
+- (IBAction)clearHistory:(id)sender {
+  [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"history"];
+  self.uncommitedHistoryEntry = nil;
+  historyCursor_ = 0;
+}
+
+- (IBAction)clearScrollback:(id)sender {
+  // Remove everything except the last/current line
+  NSTextStorage *textStorage = textView_.textStorage;
+  NSString* str = textStorage.string;
+  NSRange lastNLRange =
+      [str rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]
+                           options:NSBackwardsSearch];
+  if (lastNLRange.location != NSNotFound && lastNLRange.location != 0) {
+    [textStorage deleteCharactersInRange:
+        NSMakeRange(0, lastNLRange.location+1)];
+  }
+}
+
+- (void)eval:(NSString*)script {
   NSError *error;
-  Local<Value> result = [NodeJS eval:line name:@"<input>" error:&error];
+  
+  // Aquire reference to sys.inspect
+  if (kSysInspectFunction.IsEmpty()) {
+    HandleScope scope;
+    Local<Value> result = [NodeJS eval:@"require('sys').inspect"
+                                  name:@"<input>"
+                                 error:&error];
+    if (result.IsEmpty() || !result->IsFunction()) {
+      NSLog(@"failed to look up sys.inspect: %@", error);
+    } else {
+      kSysInspectFunction =
+          Persistent<Function>::New(Local<Function>::Cast(result));
+    }
+  }
+
+  // Prepare input
+  script = [script stringByTrimmingCharactersInSet:
+      [NSCharacterSet whitespaceCharacterSet]];
+  if ([script length] == 0) return;
+  
+  // Save to history & reset history cursor
+  [self appendToInputHistory:script];
+  historyCursor_ = 0;
+  if (uncommitedHistoryEntry_)
+    self.uncommitedHistoryEntry = nil;
+  
+  // If the line starts with a '{' or '[' we need to wrap it in ( and )
+  // for eval to function properly
+  unichar ch0 = [script characterAtIndex:0];
+  if (ch0 == '{' || ch0 == '[') {
+    script = [NSString stringWithFormat:@"(%@)", script];
+  }
+  
+  // result = eval(script)
+  HandleScope scope;
+  Local<Value> result = [NodeJS eval:script name:@"<input>" error:&error];
+  
+  // Handle result
   if (result.IsEmpty()) {
-    NSLog(@"eval exception: %@", error);
+    NSLog(@"eval error: %@", error);
     [self appendLine:[error localizedDescription]
           attributes:kErrorStringAttributes];
-  } else {
+  } else if (!result->IsUndefined()) {
+    result = kSysInspectFunction->Call(kSysInspectFunction, 1, &result);
     String::Utf8Value utf8str(result->ToString());
-    //NSLog(@"eval success: %s", *utf8str);
     [self appendLine:[NSString stringWithUTF8String:*utf8str]
           attributes:kResultStringAttributes];
   }
@@ -273,6 +350,19 @@ static NSDictionary *kInputStringAttributes,
     [scrollView_ scrollToEndOfDocument:self];
   }
 }*/
+
+- (NSRange)rangeOfCurrentInputLinePrefix {
+  NSMutableString* mstr = [textView_.textStorage mutableString];
+  NSRange lastNLRange =
+      [mstr rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]
+                            options:NSBackwardsSearch];
+  NSUInteger rLocation =
+        (lastNLRange.location == NSNotFound) ? 0 : lastNLRange.location;
+  return NSMakeRange((lastNLRange.location == NSNotFound) ? 0
+                                                          : (rLocation+1),
+                     [kLinePrefixFormat length]);
+}
+
 
 - (BOOL)textView:(NSTextView *)aTextView
     shouldChangeTextInRange:(NSRange)editRange
@@ -346,6 +436,7 @@ static NSDictionary *kInputStringAttributes,
           [textStorage appendAttributedString:[isa linePrefix]];
         }
         [[scrollView_ documentView] scrollToEndOfDocument:self];
+        [textView_ setSelectedRange:NSMakeRange(textStorage.length, 0)];
       }
     }
   } else {
@@ -353,15 +444,121 @@ static NSDictionary *kInputStringAttributes,
     alowEdit = NO;
   }
   
-  NSLog(@"alowEdit = %s", alowEdit ? "YES":"NO");
+  //NSLog(@"alowEdit = %s", alowEdit ? "YES":"NO");
   return alowEdit;
 }
 
 
 - (NSRange)textView:(NSTextView *)aTextView
-    willChangeSelectionFromCharacterRange:(NSRange)oldSelectedCharRange
-                         toCharacterRange:(NSRange)newSelectedCharRange {
-  return newSelectedCharRange;
+    willChangeSelectionFromCharacterRange:(NSRange)oldRange
+                         toCharacterRange:(NSRange)newRange {
+  // limit selection and cursor position to be somewhere after the input prefix
+  //NSLog(@"change selection: %@ --> %@", NSStringFromRange(oldRange),
+  //      NSStringFromRange(newRange));
+  NSRange linePrefixRange = [self rangeOfCurrentInputLinePrefix];
+  NSUInteger minLocation = linePrefixRange.location + linePrefixRange.length;
+  if (newRange.location < minLocation) {
+    if (newRange.length > 0) {
+      // since the user can't hit Cmd+C (because we change her selection) we put
+      // the selected text in clipboard before changing it
+      static NSPasteboard *pboard = nil;
+      if (pboard == nil) pboard = [NSPasteboard generalPasteboard];
+      [pboard clearContents];
+      NSString *str =
+          [textView_.textStorage.string substringWithRange:newRange];
+      [pboard setString:str forType:NSPasteboardTypeString];
+      str = @"Copied selection to pasteboard\n";
+      [self appendOutput:str withAttributes:kMetaStringAttributes];
+      
+      // create subrange
+      NSUInteger newEndLocation = newRange.location + newRange.length;
+      if (newEndLocation < minLocation) {
+        newRange = NSMakeRange(minLocation, 0);
+      } else {
+        newRange.length = newRange.length - (newRange.location - minLocation);
+        newRange.location = minLocation;
+      }
+    } else {
+      newRange = NSMakeRange(minLocation, 0);
+    }
+  }
+  return newRange;
+}
+
+- (NSAttributedString*)currentInputLineSettingRange:(NSRange*)outrange {
+  NSTextStorage *textStorage = textView_.textStorage;
+  NSRange range = [self rangeOfCurrentInputLinePrefix];
+  range.location += range.length;
+  range.length = textView_.textStorage.length - range.location;
+  NSAttributedString* previous =
+      [textStorage attributedSubstringFromRange:range];
+  if (outrange) *outrange = range;
+  return previous;
+}
+
+- (NSAttributedString*)replaceInputLineWithAttributedString:
+    (NSAttributedString*)as {
+  NSRange range;
+  NSAttributedString* previous = [self currentInputLineSettingRange:&range];
+  [textView_.textStorage replaceCharactersInRange:range withAttributedString:as];
+  return previous;
+}
+
+- (NSAttributedString*)replaceInputLineWithString:(NSString*)text {
+  NSAttributedString* as =
+      [[NSAttributedString alloc] initWithString:text
+                                      attributes:kInputStringAttributes];
+  NSAttributedString* previous = [self replaceInputLineWithAttributedString:as];
+  [as release];
+  return previous;
+}
+
+- (void)_replaceInputLineFromHistory:(NSArray*)history {
+  NSUInteger i = history.count - historyCursor_;
+  NSString *text = [history objectAtIndex:i];
+  NSAttributedString* previous = [self replaceInputLineWithString:text];
+  if (!uncommitedHistoryEntry_)
+    self.uncommitedHistoryEntry = previous;
+}
+
+- (void)consoleTextViewArrowUpKeyEvent:(NSEvent*)event {
+  // get an older item from history
+  NSArray* history =
+      [[NSUserDefaults standardUserDefaults] arrayForKey:@"history"];
+  if (history) {
+    // 0 = current/uncommitted
+    // 1 = last item in history
+    // ...
+    // 4 = (history.count - 3)
+    if (history.count >= (historyCursor_ + 1)) {
+      historyCursor_++;
+      [self _replaceInputLineFromHistory:history];
+    } else {
+      historyCursor_ = history.count;
+    }
+  }
+}
+
+- (void)consoleTextViewArrowDownKeyEvent:(NSEvent*)event {
+  // get a newer item from history
+  NSArray* history =
+      [[NSUserDefaults standardUserDefaults] arrayForKey:@"history"];
+  if (history && historyCursor_ >= 2) {
+    historyCursor_--;
+    [self _replaceInputLineFromHistory:history];
+  } else if (historyCursor_ == 1 && uncommitedHistoryEntry_) {
+    [self replaceInputLineWithAttributedString:uncommitedHistoryEntry_];
+    self.uncommitedHistoryEntry = nil;
+    historyCursor_ = 0;
+  }
+}
+
+- (void)consoleTextViewTabKeyEvent:(NSEvent*)event {
+  // TODO: auto-complete
+}
+
+- (void)consoleTextViewEscKeyEvent:(NSEvent*)event {
+  // TODO: suggest completions
 }
 
 @end

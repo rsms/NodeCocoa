@@ -1,10 +1,7 @@
-// Node and V8 is C++
-#ifndef __cplusplus
-#error "NodeJS is a Objective-C++/C++ only library"
-#endif
+#ifndef NODECOCOA_NODEJS_H_
+#define NODECOCOA_NODEJS_H_
 
-#import <NodeJS/node.h>
-#import <NodeJS/NodeJSProxy.h>
+#import <NodeCocoa/node.h>
 
 // Program entry point -- replaces use of NSApplicationMain
 // You can utilize the NSApplication delegate method
@@ -43,4 +40,5 @@ int NodeJSApplicationMain(int argc, const char** argv);
 
 @end
 
-#endif // ifdef __OBJC__
+#endif // __OBJC__
+#endif // NODECOCOA_NODEJS_H_

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3A14685A126DB75B00992F94 /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A146859126DB75800992F94 /* libffi.a */; };
+		3A146879126DBA7A00992F94 /* NodeCocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A146872126DB92500992F94 /* NodeCocoa.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A146930126DCFFE00992F94 /* ConsoleTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A14692F126DCFFE00992F94 /* ConsoleTextView.m */; };
 		3A7CA68D126663A0002158A5 /* NSData+node.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA6881266638F002158A5 /* NSData+node.mm */; };
 		3A7CA68E126663A0002158A5 /* NSObject+v8.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA68A1266638F002158A5 /* NSObject+v8.mm */; };
 		3A7CA6A81266649C002158A5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CA6A71266649C002158A5 /* MainMenu.xib */; };
@@ -48,11 +50,6 @@
 		3AE7CC691269CA2A00FEB40E /* NodeCocoa.framework in Copy frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NodeCocoa.framework */; };
 		3AE7CC821269CB6400FEB40E /* libnode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CC801269CB6400FEB40E /* libnode.a */; };
 		3AE7CC831269CB6400FEB40E /* libv8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CC811269CB6400FEB40E /* libv8.a */; };
-		3AE7CC941269CBA500FEB40E /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC891269CBA500FEB40E /* NSObject+SBJSON.m */; };
-		3AE7CC961269CBA500FEB40E /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC8B1269CBA500FEB40E /* NSString+SBJSON.m */; };
-		3AE7CC981269CBA500FEB40E /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC8D1269CBA500FEB40E /* SBJsonBase.m */; };
-		3AE7CC9A1269CBA500FEB40E /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC8F1269CBA500FEB40E /* SBJsonParser.m */; };
-		3AE7CC9C1269CBA500FEB40E /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC911269CBA500FEB40E /* SBJsonWriter.m */; };
 		3AE7CCBF1269CC9400FEB40E /* NodeCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NodeCocoa.framework */; };
 		3AE7CD801269D75900FEB40E /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CD7F1269D75900FEB40E /* libssl.dylib */; };
 		3AE7CD821269D76B00FEB40E /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CD7F1269D75900FEB40E /* libssl.dylib */; };
@@ -114,6 +111,9 @@
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		3A146859126DB75800992F94 /* libffi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libffi.a; path = deps/libffi/.libs/libffi.a; sourceTree = "<group>"; };
+		3A146872126DB92500992F94 /* NodeCocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeCocoa.h; sourceTree = "<group>"; };
+		3A14692E126DCFFE00992F94 /* ConsoleTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleTextView.h; sourceTree = "<group>"; };
+		3A14692F126DCFFE00992F94 /* ConsoleTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleTextView.m; sourceTree = "<group>"; };
 		3A7CA6861266638F002158A5 /* NS+node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NS+node.h"; sourceTree = "<group>"; };
 		3A7CA6871266638F002158A5 /* NSData+node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+node.h"; sourceTree = "<group>"; };
 		3A7CA6881266638F002158A5 /* NSData+node.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSData+node.mm"; sourceTree = "<group>"; };
@@ -160,17 +160,6 @@
 		3AE7CC1E1269C6DC00FEB40E /* NodeJS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJS.mm; sourceTree = "<group>"; };
 		3AE7CC801269CB6400FEB40E /* libnode.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnode.a; path = deps/node/build/default/libnode.a; sourceTree = "<group>"; };
 		3AE7CC811269CB6400FEB40E /* libv8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libv8.a; path = deps/node/build/default/libv8.a; sourceTree = "<group>"; };
-		3AE7CC871269CBA500FEB40E /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
-		3AE7CC881269CBA500FEB40E /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
-		3AE7CC891269CBA500FEB40E /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
-		3AE7CC8A1269CBA500FEB40E /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
-		3AE7CC8B1269CBA500FEB40E /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBJSON.m"; sourceTree = "<group>"; };
-		3AE7CC8C1269CBA500FEB40E /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonBase.h; sourceTree = "<group>"; };
-		3AE7CC8D1269CBA500FEB40E /* SBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonBase.m; sourceTree = "<group>"; };
-		3AE7CC8E1269CBA500FEB40E /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
-		3AE7CC8F1269CBA500FEB40E /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
-		3AE7CC901269CBA500FEB40E /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
-		3AE7CC911269CBA500FEB40E /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		3AE7CD7F1269D75900FEB40E /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.dylib; path = usr/lib/libssl.dylib; sourceTree = SDKROOT; };
 		3AE7CD881269D77E00FEB40E /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		3AE7CE4B1269D79700FEB40E /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
@@ -283,6 +272,7 @@
 			isa = PBXGroup;
 			children = (
 				3A7CA68B1266638F002158A5 /* prefix.pch */,
+				3A146872126DB92500992F94 /* NodeCocoa.h */,
 				3AE7CC1D1269C6DC00FEB40E /* NodeJS.h */,
 				3AE7CC1E1269C6DC00FEB40E /* NodeJS.mm */,
 				3ABA198F126C642200753966 /* NodeJSProxy.h */,
@@ -294,7 +284,6 @@
 				3A7CA6881266638F002158A5 /* NSData+node.mm */,
 				3A7CA6891266638F002158A5 /* NSObject+v8.h */,
 				3A7CA68A1266638F002158A5 /* NSObject+v8.mm */,
-				3AE7CC861269CBA500FEB40E /* json */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -309,6 +298,8 @@
 				3A7CA69812666440002158A5 /* main.mm */,
 				3A7CA6AC1266F55D002158A5 /* AppDelegate.h */,
 				3A7CA6AD1266F55D002158A5 /* AppDelegate.mm */,
+				3A14692E126DCFFE00992F94 /* ConsoleTextView.h */,
+				3A14692F126DCFFE00992F94 /* ConsoleTextView.m */,
 			);
 			path = "console-app";
 			sourceTree = "<group>";
@@ -361,25 +352,6 @@
 			name = v8;
 			sourceTree = "<group>";
 		};
-		3AE7CC861269CBA500FEB40E /* json */ = {
-			isa = PBXGroup;
-			children = (
-				3AE7CC871269CBA500FEB40E /* JSON.h */,
-				3AE7CC881269CBA500FEB40E /* NSObject+SBJSON.h */,
-				3AE7CC891269CBA500FEB40E /* NSObject+SBJSON.m */,
-				3AE7CC8A1269CBA500FEB40E /* NSString+SBJSON.h */,
-				3AE7CC8B1269CBA500FEB40E /* NSString+SBJSON.m */,
-				3AE7CC8C1269CBA500FEB40E /* SBJsonBase.h */,
-				3AE7CC8D1269CBA500FEB40E /* SBJsonBase.m */,
-				3AE7CC8E1269CBA500FEB40E /* SBJsonParser.h */,
-				3AE7CC8F1269CBA500FEB40E /* SBJsonParser.m */,
-				3AE7CC901269CBA500FEB40E /* SBJsonWriter.h */,
-				3AE7CC911269CBA500FEB40E /* SBJsonWriter.m */,
-			);
-			name = json;
-			path = "deps/json-framework/Classes";
-			sourceTree = SOURCE_ROOT;
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -387,6 +359,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A146879126DBA7A00992F94 /* NodeCocoa.h in Headers */,
 				3ABA1991126C642200753966 /* NodeJSProxy.h in Headers */,
 				3ABA18F6126C50F000753966 /* NSObjectProxy.h in Headers */,
 				3AE7CC1F1269C6DC00FEB40E /* NodeJS.h in Headers */,
@@ -558,6 +531,7 @@
 			files = (
 				3A7CA6E31266F820002158A5 /* main.mm in Sources */,
 				3A7CA6AE1266F55D002158A5 /* AppDelegate.mm in Sources */,
+				3A146930126DCFFE00992F94 /* ConsoleTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,11 +542,6 @@
 				3A7CA68D126663A0002158A5 /* NSData+node.mm in Sources */,
 				3A7CA68E126663A0002158A5 /* NSObject+v8.mm in Sources */,
 				3AE7CC201269C6DC00FEB40E /* NodeJS.mm in Sources */,
-				3AE7CC941269CBA500FEB40E /* NSObject+SBJSON.m in Sources */,
-				3AE7CC961269CBA500FEB40E /* NSString+SBJSON.m in Sources */,
-				3AE7CC981269CBA500FEB40E /* SBJsonBase.m in Sources */,
-				3AE7CC9A1269CBA500FEB40E /* SBJsonParser.m in Sources */,
-				3AE7CC9C1269CBA500FEB40E /* SBJsonWriter.m in Sources */,
 				3ABA18F7126C50F000753966 /* NSObjectProxy.mm in Sources */,
 				3ABA1992126C642200753966 /* NodeJSProxy.mm in Sources */,
 			);

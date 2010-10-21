@@ -1,6 +1,7 @@
 #import "NodeJS.h"
 #import <ev.h>
 #import <node_stdio.h>
+#import "NodeJSProxy.h"
 
 @interface NodeJS (Private)
 + (NodeJS*)sharedInstance;

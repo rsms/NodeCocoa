@@ -36,7 +36,7 @@ var patterns = [];
 headers.forEach(function (filename) {
   patterns.push([
     new RegExp('#(include|import) <'+RegExp.escape(filename)+'>', 'g'),
-    '#$1 <NodeJS/'+filename+'>'
+    '#$1 <NodeCocoa/'+filename+'>'
   ]);
 });
 

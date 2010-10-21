@@ -1,0 +1,4 @@
+@interface ConsoleTextView : NSTextView {
+}
+
+@end

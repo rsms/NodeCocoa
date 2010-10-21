@@ -1,5 +1,5 @@
-#import <NodeJS/node.h>
-#import <NodeJS/NSObjectProxy.h>
+#import <NodeCocoa/node.h>
+#import <NodeCocoa/NSObjectProxy.h>
 
 @interface NodeJSProxy : NSObject {
 }

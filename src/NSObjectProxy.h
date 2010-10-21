@@ -1,7 +1,7 @@
-#ifndef NODEJS_NSOBJECT_PROXY_H
-#define NODEJS_NSOBJECT_PROXY_H
+#ifndef NODECOCOA_NSOBJECT_PROXY_H_
+#define NODECOCOA_NSOBJECT_PROXY_H_
 
-#include <NodeJS/node.h>
+#include <NodeCocoa/node.h>
 
 typedef void (^NSObjectProxyConfigBlock)(v8::Handle<v8::Template>,
                                          v8::Handle<v8::ObjectTemplate>);
@@ -42,4 +42,4 @@ inline NSObject* NSObjectProxyUnwrap(v8::Handle<v8::Object> self) {
   return (NSObject*)self->GetPointerFromInternalField(0);
 }
 
-#endif // NODEJS_NSOBJECT_PROXY_H
+#endif // NODECOCOA_NSOBJECT_PROXY_H_

@@ -1,5 +1,5 @@
 #import <Cocoa/Cocoa.h>
-#import <NodeJS/NodeJS.h>
+#import <NodeCocoa/NodeCocoa.h>
 
 int main(int argc, char *argv[]) {
   return NodeJSApplicationMain(argc, (const char **)argv);
