@@ -9,6 +9,12 @@ if (typeof process.stdout === 'number') {
 
 console.log('hello from main.js');
 
+// as our demo app is emitting a "keyPress" event, let's listen for it
+process.on('keyPress', function () {
+  console.log('process.on:keyPress(%s)',
+              inspect(Array.prototype.slice.apply(arguments)))
+})
+
 // test timeout (should block graceful program termination)
 var t = new Date;
 setTimeout(function() {

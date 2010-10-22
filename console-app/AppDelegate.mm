@@ -1,5 +1,5 @@
 #import "AppDelegate.h"
-#import "NodeJS.h"
+#import <NodeCocoa/NodeCocoa.h>
 
 using namespace v8;
 
@@ -101,7 +101,7 @@ static NSDictionary *kInputStringAttributes,
   [textView_ setTextContainerInset:NSMakeSize(2.0, 4.0)];
   [textView_ setDelegate:self];
   [textView_.textStorage appendAttributedString:[isa linePrefix]];
-  [textView_.textStorage setDelegate:self];
+  //[textView_.textStorage setDelegate:self];
   
   // setup output text view
   [outputTextView_ setTextColor:kInputLineColor];
@@ -128,6 +128,8 @@ static NSDictionary *kInputStringAttributes,
       object:pipeReadHandle];
   [pipeReadHandle readInBackgroundAndNotify];
   
+  return;
+  // redirect stderr to a pipe
   // Alternative 1: Might cause funky crashes if NSLog is invoked at an
   // inapropriate time (e.g. during reading of stderr).
   nodeStderrPipe_ = [[NSPipe pipe] retain];
@@ -265,7 +267,8 @@ static NSDictionary *kInputStringAttributes,
   if (kSysInspectFunction.IsEmpty()) {
     HandleScope scope;
     Local<Value> result = [NodeJS eval:@"require('sys').inspect"
-                                  name:@"<input>"
+                                origin:@"<internal>"
+                               context:nil
                                  error:&error];
     if (result.IsEmpty() || !result->IsFunction()) {
       NSLog(@"failed to look up sys.inspect: %@", error);
@@ -277,7 +280,7 @@ static NSDictionary *kInputStringAttributes,
 
   // Prepare input
   script = [script stringByTrimmingCharactersInSet:
-      [NSCharacterSet whitespaceCharacterSet]];
+      [NSCharacterSet whitespaceAndNewlineCharacterSet]];
   if ([script length] == 0) return;
   
   // Save to history & reset history cursor
@@ -286,20 +289,21 @@ static NSDictionary *kInputStringAttributes,
   if (uncommitedHistoryEntry_)
     self.uncommitedHistoryEntry = nil;
   
-  // If the line starts with a '{' or '[' we need to wrap it in ( and )
-  // for eval to function properly
+  // If the line starts with a '{' or '[' (or is a function) we need to wrap it
+  // in ( and ) for eval to function properly
   unichar ch0 = [script characterAtIndex:0];
-  if (ch0 == '{' || ch0 == '[') {
+  if (ch0 == '{' || ch0 == '[' || [script hasPrefix:@"function"]) {
     script = [NSString stringWithFormat:@"(%@)", script];
   }
   
   // result = eval(script)
   HandleScope scope;
-  Local<Value> result = [NodeJS eval:script name:@"<input>" error:&error];
+  Local<Value> result =
+      [NodeJS eval:script origin:@"<input>" context:nil error:&error];
   
   // Handle result
   if (result.IsEmpty()) {
-    NSLog(@"eval error: %@", error);
+    NSLog(@"eval: %@", error);
     [self appendLine:[error localizedDescription]
           attributes:kErrorStringAttributes];
   } else if (!result->IsUndefined()) {
@@ -310,46 +314,9 @@ static NSDictionary *kInputStringAttributes,
   }
 }
 
-
-#pragma mark -
-#pragma mark NSTextStorageDelegate implementation
-
-/*- (void)textStorageDidProcessEditing:(NSNotification *)notification {
-  NSLog(@"textStorageDidProcessEditing");
-  [scrollView_ scrollToEndOfDocument:self];
-  NSTextStorage	*textStorage = [notification object];
-	NSRange	editRange = [textStorage editedRange];
-	NSInteger changeInLen = [textStorage changeInLength];
-	BOOL wasInUndoRedo = [[textView_ undoManager] isUndoing] ||
-                       [[textView_ undoManager] isRedoing];
-  NSLog(@"textStorageDidProcessEditing:\n"
-        @"  editRange: %@\n"
-        @"  changeInLength: %d\n"
-        @"  wasInUndoRedo: %s",
-        NSStringFromRange(editRange), changeInLen, wasInUndoRedo ? "YES":"NO");
-  if (changeInLen > 0) {
-    // insertion (or additive replacement)
-    
-    NSString* str = [[textStorage mutableString] substringWithRange:editRange];
-    NSLog(@"added: '%@'", str);
-    str = [str stringByReplacingOccurrencesOfString:@"\n" withString:@"\n> "];
-    [textStorage replaceCharactersInRange:editRange withString:str];
-  }
-}*/
-
-
 #pragma mark -
 #pragma mark NSTextViewDelegate implementation
 
-
-/*- (void)textDidChange:(NSNotification *)notification {
-  NSTextStorage* textStorage = textView_.textStorage;
-	NSInteger changeInLen = [textStorage changeInLength];
-  if (changeInLen > 0) {
-    // content was added, so make sure we see everything
-    [scrollView_ scrollToEndOfDocument:self];
-  }
-}*/
 
 - (NSRange)rangeOfCurrentInputLinePrefix {
   NSMutableString* mstr = [textView_.textStorage mutableString];
@@ -501,6 +468,7 @@ static NSDictionary *kInputStringAttributes,
   NSRange range;
   NSAttributedString* previous = [self currentInputLineSettingRange:&range];
   [textView_.textStorage replaceCharactersInRange:range withAttributedString:as];
+  [[outputScrollView_ documentView] scrollToEndOfDocument:self]; // FIXME: buggy
   return previous;
 }
 
@@ -521,6 +489,53 @@ static NSDictionary *kInputStringAttributes,
     self.uncommitedHistoryEntry = previous;
 }
 
+//-----------------------
+
+- (void)_testReadDirAsync {
+  static NodeJSFunction *readAsyncFunc = nil;
+  if (!readAsyncFunc) {
+    readAsyncFunc = [[NodeJSFunction functionFromString:
+        @"function readAsyncTest(callback){"
+          @"require('fs').readdir('/',"
+            @"callback"
+            //@"function(err, files) {"
+            //@"console.log('fs.readdir called back: '+"
+            //    @"inspect(Array.prototype.slice.apply(arguments)) );"
+            //@"}"
+          @")"
+        @"}" error:nil] retain];
+  }
+  HandleScope scope;
+  
+  __block NodeJSFunction *callback;
+  callback = [[NodeJSFunction alloc] initWithBlock:^(const Arguments& args){
+    HandleScope scope;
+    Local<Value> result = Local<Value>::New(Undefined());
+    if (callback) {
+      // your code here, which possibly sets |result|
+      [callback release]; callback = nil;
+    }
+    return v8::Handle<v8::Value>(scope.Close(result));
+  }];
+  v8::Local<Value> argv[] = { callback.functionValue };
+  [readAsyncFunc callWithV8Arguments:argv count:1 error:nil];
+  //[callback call];
+  
+  /* Convenience: appending a block callback as last argument
+  [fun callWithV8Arguments:argv count:1 error:nil callback:^(const Arguments& args){
+    NSLog(@"fs.readdir called back with %d arguments", args.Length());
+  }];
+  [fun callWithCallback:^(const Arguments& args){
+    NSLog(@"fs.readdir called back with %d arguments", args.Length());
+  }];*/
+  
+  // ref test
+  /*Local<Value> data = External::Wrap((void*)self);
+  Local<Function> fun = FunctionTemplate::New(&Handler, data)->GetFunction();
+  Local<Value> argv2[] = { fun };
+  [readAsyncFunc callWithV8Arguments:argv2 count:1 error:nil];*/
+}
+
 - (void)consoleTextViewArrowUpKeyEvent:(NSEvent*)event {
   // get an older item from history
   NSArray* history =
@@ -537,6 +552,19 @@ static NSDictionary *kInputStringAttributes,
       historyCursor_ = history.count;
     }
   }
+  
+  // Demonstrates using a NodeJSFunction wrapper, emitting an event on |process|
+  static NodeJSFunction *func = nil;
+  if (!func) {
+    func = [[NodeJSFunction functionFromString:
+        @"function emitKeyCode(keyCode){ process.emit('keyPress', keyCode) }"
+                                         error:nil] retain];
+  }
+  HandleScope scope;
+  Local<Value> argv[] = { v8::Integer::New([event keyCode]) };
+  [func callWithV8Arguments:argv count:1 error:nil];
+  
+  [self _testReadDirAsync];
 }
 
 - (void)consoleTextViewArrowDownKeyEvent:(NSEvent*)event {
@@ -551,6 +579,15 @@ static NSDictionary *kInputStringAttributes,
     self.uncommitedHistoryEntry = nil;
     historyCursor_ = 0;
   }
+  
+  // Demonstrates compiling and reusing a script in the default (main) context
+  // which emits an event on |process|
+  static NodeJSScript *emitScript = nil;
+  if (!emitScript) {
+    emitScript = [[NodeJSScript compiledScriptFromSource:
+                   @"process.emit('keyPress', 125)"] retain];
+  }
+  [emitScript run:nil];
 }
 
 - (void)consoleTextViewTabKeyEvent:(NSEvent*)event {

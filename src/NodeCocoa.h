@@ -30,5 +30,7 @@
 #endif
 
 #import <NodeCocoa/NodeJS.h>
+#import <NodeCocoa/NodeJSScript.h>
+#import <NodeCocoa/NodeJSFunction.h>
 
 #endif // NODECOCOA_NODECOCOA_H_

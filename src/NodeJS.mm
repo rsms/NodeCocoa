@@ -1,7 +1,6 @@
 #import "NodeJS.h"
 #import <ev.h>
 #import <node_stdio.h>
-#import "NodeJSProxy.h"
 
 @interface NodeJS (Private)
 + (NodeJS*)sharedInstance;
@@ -114,13 +113,7 @@ static NSMutableDictionary* TryCatchToErrorDict(TryCatch &try_catch) {
   return info;
 }
 
-static NSError *NSErrorFromV8TryCatch(TryCatch &try_catch) {
-  NSMutableDictionary* info = nil;
-  if (try_catch.HasCaught())
-    info = TryCatchToErrorDict(try_catch);
-  return [NSError errorWithDomain:@"node" code:0 userInfo:info];
-}
-
+// Note: See NSError additions in NodeJS.h for useful helpers.
 
 // ----------------------------------------------------------------------------
 
@@ -328,8 +321,27 @@ int NodeJSApplicationMain(int argc, const char** argv) {
 
 // ----------------------------------------------------------------------------
 
-@implementation NodeJS
+const NSString* NodeJSNSErrorDomain = @"node.js";
 
+@implementation NSError (v8)
+
++ (NSError*)errorFromV8TryCatch:(TryCatch &)try_catch {
+  NSMutableDictionary* info = nil;
+  if (try_catch.HasCaught())
+    info = TryCatchToErrorDict(try_catch);
+  return [NSError errorWithDomain:NodeJSNSErrorDomain code:0 userInfo:info];
+}
+
++ (NSError*)nodeErrorWithLocalizedDescription:(NSString*)description {
+  return [NSError errorWithDomain:NodeJSNSErrorDomain code:0 userInfo:
+              [NSDictionary dictionaryWithObject:description
+                                          forKey:NSLocalizedDescriptionKey]];
+}
+
+@end
+
+
+@implementation NodeJS
 static NodeJS* sharedInstance_ = nil;
 
 - (id)init {
@@ -393,7 +405,7 @@ static NodeJS* sharedInstance_ = nil;
 }
 
 + (void)setHostObject:(NSObject*)hostObject {
-  Local<Object> global = gMainContext->Global();
+  /*Local<Object> global = gMainContext->Global();
   Local<Object> process =
       Local<Object>::Cast(global->Get(String::NewSymbol("process")));
   if (!process.IsEmpty()) {
@@ -409,44 +421,232 @@ static NodeJS* sharedInstance_ = nil;
       NSLog(@"in configuredByBlock");
     }];
     process->Set(String::NewSymbol("host"), host);
-  }
+  }*/
 }
 
-+ (Local<Value>)eval:(NSString*)source
-                name:(NSString*)name
-               error:(NSError**)error {
-  
++ (Local<v8::Script>)compile:(NSString*)source
+                      origin:(NSString*)origin
+                     context:(Context*)context
+                       error:(NSError**)error {
   // compile script in the main module's context
   assert(!gMainContext.IsEmpty());
   gMainContext->Enter();
+  if (context) context->Enter();
   HandleScope scope;
-  
   TryCatch try_catch;
   
   // Compile
-  Local<v8::Script> script = v8::Script::Compile(
-      String::New([source UTF8String]),
-      name ? String::New([name UTF8String])
-           : String::NewSymbol("<string>"));
-  Local<Value> result;
-  if (script.IsEmpty()) {
-    if (try_catch.HasCaught()) {
-      *error = NSErrorFromV8TryCatch(try_catch);
-    } else {
-      *error = [NSError errorWithDomain:@"node" code:0 userInfo:
-          [NSDictionary dictionaryWithObject:@"internal error"
-                                      forKey:NSLocalizedDescriptionKey]];
-    }
+  Local<String> sourcestr = String::New([source UTF8String]);
+  Local<v8::Script> script;
+  if (origin) {
+    script = Script::Compile(sourcestr, String::New([origin UTF8String]));
   } else {
-    // Execute script
-    result = script->Run();
-    if (result.IsEmpty()) {
-      *error = NSErrorFromV8TryCatch(try_catch);
+    script = Script::Compile(sourcestr);
+  }
+  if (script.IsEmpty() && error) {
+    if (try_catch.HasCaught()) {
+      *error = [NSError errorFromV8TryCatch:try_catch];
+    } else {
+      *error = [NSError nodeErrorWithLocalizedDescription:@"internal error"];
     }
   }
   
+  // unroll contexts
+  if (context) context->Exit();
   gMainContext->Exit();
+  return scope.Close(script);
+}
+
++ (Local<Value>)eval:(NSString*)source
+              origin:(NSString*)origin
+             context:(v8::Context*)context
+               error:(NSError**)error {
+  HandleScope scope;
+  Local<Value> result;
+  Local<v8::Script> script =
+      [self compile:source origin:origin context:context error:error];
+  if (!script.IsEmpty()) {
+    TryCatch try_catch;
+    result = script->Run();
+    if (result.IsEmpty() && error)
+      *error = [NSError errorFromV8TryCatch:try_catch];
+  }
   return scope.Close(result);
 }
 
 @end
+
+// -----------------------------------------------------------------------------
+
+/*class BlockInvocation {
+ public:
+  enum Type {
+    VoidReturn = 1,
+    HandleValueReturn = 2,
+  };
+  
+  virtual ~BlockInvocation() {
+    if (block_) {
+      [(NodeJSFunctionBlock1)block_ release];
+      block_ = NULL;
+    }
+  }
+  
+  inline Type type() { return type_; }
+  inline void* block() { return block_; }
+  
+  Persistent<Function> handle_;
+  
+  static v8::Local<Function> New(NodeJSFunctionBlock1 block) {
+    HandleScope scope;
+    BlockInvocation* self = new BlockInvocation(block, VoidReturn);
+    Persistent<Function> phandle;
+    Local<FunctionTemplate> fun_t =
+        FunctionTemplate::New(&Handler, External::Wrap(self));
+    phandle = Persistent<Function>::New(fun_t->GetFunction());
+    //assert(phandle->InternalFieldCount() > 0);
+    //phandle->SetPointerInInternalField(0, self);
+    phandle.MakeWeak(self, &WeakCallback);
+    return scope.Close(phandle);
+  }
+  
+  static v8::Handle<Value> Handler(const Arguments& args) {
+    Local<Value> data = args.Data(); assert(!data.IsEmpty());
+    BlockInvocation* ctx = (BlockInvocation*)External::Unwrap(data);
+    switch (ctx->type()) {
+      case BlockInvocation::VoidReturn:
+        ((NodeJSFunctionBlock1)ctx->block())(args);
+    }
+    return Undefined();
+  }
+  
+ protected:
+  BlockInvocation(void* block, Type type) : block_(block)
+                                             , type_(type) {
+    // Note: block should be copied already, so we "steal" a reference.
+  }
+ 
+  void *block_;
+  Type type_;
+  
+ private:
+  static void WeakCallback(v8::Persistent<v8::Value> value, void *data) {
+    NSLog(@"WeakCallback"); fflush(stderr);
+    return;
+    BlockInvocation *obj = static_cast<BlockInvocation*>(data);
+    assert(value == obj->handle_);
+    //assert(!obj->refs_);
+    assert(value.IsNearDeath());
+    delete obj;
+  }
+};*/
+
+/*class NodeJSBlock : NodeJSFunctionWrap {
+ public:
+  enum Type {
+    VoidReturn = 1,
+    HandleValueReturn = 2,
+  };
+  
+  static v8::Persistent<v8::FunctionTemplate> constructor_template;
+  
+  static void Initialize(v8::Handle<v8::Object> target);
+  static v8::Handle<v8::Value> New (const v8::Arguments& args);
+  static v8::Local<Function> Create(NodeJSFunctionBlock1 block);
+  
+  NodeJSBlock() : NodeJSFunctionWrap() {
+    
+  }
+  
+  virtual NodeJSBlock() {
+    NSLog(@"~NodeJSBlock");
+    if (block_) {
+      [(NodeJSFunctionBlock1)block_ release];
+      block_ = NULL;
+    }
+  }
+  
+  inline Type type() { return type_; }
+  inline void* block() { return block_; }
+
+ private:
+  void *block;
+  Type type;
+};
+
+v8::Handle<Value> NodeJSBlock::New (const Arguments& args) {
+  if (!args.IsConstructCall()) {
+    return FromConstructorTemplate(constructor_template, args);
+  }
+  HandleScope scope;
+
+  NodeJSBlock *obj = new NodeJSBlock();
+  obj->Wrap(args.Holder());
+
+  return args.This();
+}
+
+v8::Local<Function> NodeJSBlock::Create(NodeJSFunctionBlock1 block) {
+  HandleScope scope;
+
+  Local<FunctionTemplate> t = FunctionTemplate::New(, External::Wrap(self));
+  constructor_template = Persistent<FunctionTemplate>::New(t);
+  constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
+  constructor_template->SetClassName(String::NewSymbol("NodeJSBlock"));
+  
+  Local<Function> function = constructor_template->GetFunction();
+  Local<Object> instance = function->NewInstance();
+}*/
+
+/*typedef struct {
+  void *block;
+  int type;
+} BlockCtx;
+
+static v8::Handle<Value> Handler(const Arguments& args) {
+  HandleScope scope;
+  NSLog(@"! Handler");
+  Local<Value> data = args.Data(); assert(!data.IsEmpty());
+  BlockCtx* ctx = (BlockCtx*)External::Unwrap(data);
+  switch (ctx->type) {
+    case 1:
+      ((NodeJSFunctionBlock1)ctx->block)(args);
+  }
+  return Undefined();
+}
+
+static void WeakCallback(v8::Persistent<v8::Value> value, void *data) {
+  NSLog(@"! WeakCallback"); fflush(stderr);
+  BlockCtx* ctx = (BlockCtx*)data;
+  //assert(value == obj->handle_);
+  //assert(!obj->refs_);
+  assert(value.IsNearDeath());
+  if (ctx->block) [(id)ctx->block release];
+  delete ctx;
+}
+
+v8::Local<Function> NodeJS_function(NodeJSFunctionBlock1 block) {
+  HandleScope scope;
+  
+  // ctx
+  BlockCtx *ctx = new BlockCtx;
+  ctx->block = [block copy];
+  ctx->type = 1;
+  
+  // create a function
+  Local<FunctionTemplate> t =
+        FunctionTemplate::New(&Handler, External::Wrap(ctx));
+  Local<Function> fun = t->GetFunction();
+  
+  // register for a "destroy" callback
+  Persistent<Function> phandle = Persistent<Function>::New(fun);
+  phandle.MakeWeak(ctx, &WeakCallback);
+  
+  return fun;
+}*/
+
+//namespace nodejs {
+//typedef void (^FunctionBlockWithoutArgs)(void);
+//typedef void (^FunctionBlockWithV8Args)(const v8::Arguments&);
+//typedef v8::Local<v8::Value> (^FunctionBlockWithV8ArgsResult)(const v8::Arguments&);
+//}

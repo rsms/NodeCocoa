@@ -10,8 +10,7 @@
 		3A14685A126DB75B00992F94 /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A146859126DB75800992F94 /* libffi.a */; };
 		3A146879126DBA7A00992F94 /* NodeCocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A146872126DB92500992F94 /* NodeCocoa.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A146930126DCFFE00992F94 /* ConsoleTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A14692F126DCFFE00992F94 /* ConsoleTextView.m */; };
-		3A7CA68D126663A0002158A5 /* NSData+node.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA6881266638F002158A5 /* NSData+node.mm */; };
-		3A7CA68E126663A0002158A5 /* NSObject+v8.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA68A1266638F002158A5 /* NSObject+v8.mm */; };
+		3A2947951271F8E500B31B0C /* NodeJSBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A2947931271F8E500B31B0C /* NodeJSBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A7CA6A81266649C002158A5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CA6A71266649C002158A5 /* MainMenu.xib */; };
 		3A7CA6AB126664F4002158A5 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CA6AA126664EB002158A5 /* main.js */; };
 		3A7CA6AE1266F55D002158A5 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA6AD1266F55D002158A5 /* AppDelegate.mm */; };
@@ -41,10 +40,12 @@
 		3A835731126A5F040058174F /* v8-debug.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A83572E126A5F040058174F /* v8-debug.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A835732126A5F040058174F /* v8-profiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A83572F126A5F040058174F /* v8-profiler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A835733126A5F040058174F /* v8.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A835730126A5F040058174F /* v8.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A9629E512708EA700C19FB2 /* NodeJSScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A9629E312708EA700C19FB2 /* NodeJSScript.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A9629E612708EA700C19FB2 /* NodeJSScript.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9629E412708EA700C19FB2 /* NodeJSScript.mm */; };
+		3A962A6912709B0800C19FB2 /* NodeJSFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A962A6712709B0800C19FB2 /* NodeJSFunction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A962A6A12709B0800C19FB2 /* NodeJSFunction.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A962A6812709B0800C19FB2 /* NodeJSFunction.mm */; };
 		3ABA18F6126C50F000753966 /* NSObjectProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3ABA18F4126C50F000753966 /* NSObjectProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3ABA18F7126C50F000753966 /* NSObjectProxy.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3ABA18F5126C50F000753966 /* NSObjectProxy.mm */; };
 		3ABA1991126C642200753966 /* NodeJSProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3ABA198F126C642200753966 /* NodeJSProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3ABA1992126C642200753966 /* NodeJSProxy.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3ABA1990126C642200753966 /* NodeJSProxy.mm */; };
 		3AE7CC1F1269C6DC00FEB40E /* NodeJS.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AE7CC1D1269C6DC00FEB40E /* NodeJS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AE7CC201269C6DC00FEB40E /* NodeJS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC1E1269C6DC00FEB40E /* NodeJS.mm */; };
 		3AE7CC691269CA2A00FEB40E /* NodeCocoa.framework in Copy frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NodeCocoa.framework */; };
@@ -114,6 +115,8 @@
 		3A146872126DB92500992F94 /* NodeCocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeCocoa.h; sourceTree = "<group>"; };
 		3A14692E126DCFFE00992F94 /* ConsoleTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleTextView.h; sourceTree = "<group>"; };
 		3A14692F126DCFFE00992F94 /* ConsoleTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleTextView.m; sourceTree = "<group>"; };
+		3A2947931271F8E500B31B0C /* NodeJSBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJSBlock.h; sourceTree = "<group>"; };
+		3A2947941271F8E500B31B0C /* NodeJSBlock.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJSBlock.mm; sourceTree = "<group>"; };
 		3A7CA6861266638F002158A5 /* NS+node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NS+node.h"; sourceTree = "<group>"; };
 		3A7CA6871266638F002158A5 /* NSData+node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+node.h"; sourceTree = "<group>"; };
 		3A7CA6881266638F002158A5 /* NSData+node.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSData+node.mm"; sourceTree = "<group>"; };
@@ -152,6 +155,10 @@
 		3A83572E126A5F040058174F /* v8-debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "v8-debug.h"; path = "deps/node/deps/v8/include/v8-debug.h"; sourceTree = "<group>"; };
 		3A83572F126A5F040058174F /* v8-profiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "v8-profiler.h"; path = "deps/node/deps/v8/include/v8-profiler.h"; sourceTree = "<group>"; };
 		3A835730126A5F040058174F /* v8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = v8.h; path = deps/node/deps/v8/include/v8.h; sourceTree = "<group>"; };
+		3A9629E312708EA700C19FB2 /* NodeJSScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJSScript.h; sourceTree = "<group>"; };
+		3A9629E412708EA700C19FB2 /* NodeJSScript.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJSScript.mm; sourceTree = "<group>"; };
+		3A962A6712709B0800C19FB2 /* NodeJSFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJSFunction.h; sourceTree = "<group>"; };
+		3A962A6812709B0800C19FB2 /* NodeJSFunction.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJSFunction.mm; sourceTree = "<group>"; };
 		3ABA18F4126C50F000753966 /* NSObjectProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectProxy.h; sourceTree = "<group>"; };
 		3ABA18F5126C50F000753966 /* NSObjectProxy.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSObjectProxy.mm; sourceTree = "<group>"; };
 		3ABA198F126C642200753966 /* NodeJSProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJSProxy.h; sourceTree = "<group>"; };
@@ -275,6 +282,12 @@
 				3A146872126DB92500992F94 /* NodeCocoa.h */,
 				3AE7CC1D1269C6DC00FEB40E /* NodeJS.h */,
 				3AE7CC1E1269C6DC00FEB40E /* NodeJS.mm */,
+				3A9629E312708EA700C19FB2 /* NodeJSScript.h */,
+				3A9629E412708EA700C19FB2 /* NodeJSScript.mm */,
+				3A962A6712709B0800C19FB2 /* NodeJSFunction.h */,
+				3A962A6812709B0800C19FB2 /* NodeJSFunction.mm */,
+				3A2947931271F8E500B31B0C /* NodeJSBlock.h */,
+				3A2947941271F8E500B31B0C /* NodeJSBlock.mm */,
 				3ABA198F126C642200753966 /* NodeJSProxy.h */,
 				3ABA1990126C642200753966 /* NodeJSProxy.mm */,
 				3ABA18F4126C50F000753966 /* NSObjectProxy.h */,
@@ -361,6 +374,9 @@
 			files = (
 				3A146879126DBA7A00992F94 /* NodeCocoa.h in Headers */,
 				3ABA1991126C642200753966 /* NodeJSProxy.h in Headers */,
+				3A9629E512708EA700C19FB2 /* NodeJSScript.h in Headers */,
+				3A962A6912709B0800C19FB2 /* NodeJSFunction.h in Headers */,
+				3A2947951271F8E500B31B0C /* NodeJSBlock.h in Headers */,
 				3ABA18F6126C50F000753966 /* NSObjectProxy.h in Headers */,
 				3AE7CC1F1269C6DC00FEB40E /* NodeJS.h in Headers */,
 				3A835703126A5E8C0058174F /* node_buffer.h in Headers */,
@@ -539,11 +555,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A7CA68D126663A0002158A5 /* NSData+node.mm in Sources */,
-				3A7CA68E126663A0002158A5 /* NSObject+v8.mm in Sources */,
 				3AE7CC201269C6DC00FEB40E /* NodeJS.mm in Sources */,
-				3ABA18F7126C50F000753966 /* NSObjectProxy.mm in Sources */,
-				3ABA1992126C642200753966 /* NodeJSProxy.mm in Sources */,
+				3A9629E612708EA700C19FB2 /* NodeJSScript.mm in Sources */,
+				3A962A6A12709B0800C19FB2 /* NodeJSFunction.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

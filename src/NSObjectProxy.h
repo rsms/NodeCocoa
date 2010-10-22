@@ -16,7 +16,7 @@ typedef void (^NSObjectProxyConfigBlock)(v8::Handle<v8::Template>,
  *
  * Calling from v8-land:
  *   obj.foo
- *   obj.bar_withCode("bararg", "codearg")
+ *   obj.bar_withCode_("bararg", "codearg")
  *
  * Will retrieve @property "foo" and invoke method |bar:withCode:| on the
  * NSObject instance.

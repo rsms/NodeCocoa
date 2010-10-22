@@ -35,8 +35,8 @@
       break;
     }
     default:
-      printf("(ev 1 of %lu) keyCode = %u\n",
-             (unsigned long)events.count, keyCode);
+      //printf("(ev 1 of %lu) keyCode = %u\n",
+      //       (unsigned long)events.count, keyCode);
       [super interpretKeyEvents:events];
   }
 }
