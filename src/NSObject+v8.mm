@@ -27,5 +27,3 @@ using namespace v8;
   return Local<Value>::New(v8::Null());
 }
 @end
-
-
