@@ -1,4 +1,4 @@
-#import "NSObject+v8.h"
+#import "NS-additions.h"
 
 using namespace v8;
 
