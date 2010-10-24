@@ -4,7 +4,7 @@ using namespace v8;
 
 @implementation NSData (node)
 
-- (Local<Value>)v8Representation {
+- (Local<Value>)v8Value {
   HandleScope scope;
   
   // Note: The following _might_ cause a race condition if called at the same

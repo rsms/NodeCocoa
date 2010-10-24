@@ -8,19 +8,16 @@ typedef v8::Handle<v8::Value> (^NodeJSFunctionBlock)(const v8::Arguments& args);
 }
 
 @property(nonatomic, readonly) v8::Persistent<v8::Function> function;
-@property(nonatomic, readonly) v8::Local<v8::Value> functionValue;
 
 /**
  * Create a new function by compiling JavaScript |source|, passing any errors in
  * |error|.
  *
- * Supports five different styles & syntax'es:
+ * Examples:
  *
- *   1. Fully qualified, named:     "function name(arg1, arg2) { return 3*7 }"
- *   2. Fully qualified, anonymous: "function (arg1, arg2) { return 3*7 }"
- *   3. Keyword omitted:            "(arg1, arg2) { return 3*7 }"
- *   4. Arguments omitted:          "{ return 3*7 }"
- *   5. Body-only:                  "return 3*7"
+ *   functionFromString:@"function name(x, y) { return x * y }"
+ *   functionFromString:@"function (arg1) { return arg1+'.bar' }"
+ *   functionFromString:@"require('util').log"
  *
  * @param source    JavaScript source (a function definition).
  * @param origin    Optional identifier (e.g. filename).
@@ -120,7 +117,7 @@ typedef v8::Handle<v8::Value> (^NodeJSFunctionBlock)(const v8::Arguments& args);
  *     [callback release];
  *     return v8::Handle<v8::Value>(scope.Close(result));
  *   }];
- *   v8::Local<Value> argv[] = { callback.functionValue };
+ *   v8::Local<Value> argv[] = { callback.v8Value };
  *   [someAsyncFunc callWithV8Arguments:argv count:1 error:nil];
  *
  * Once again, in the above use case it's not recommended to use blocks. If you

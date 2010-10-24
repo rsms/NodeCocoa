@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3A14685A126DB75B00992F94 /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A146859126DB75800992F94 /* libffi.a */; };
 		3A146879126DBA7A00992F94 /* NodeCocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A146872126DB92500992F94 /* NodeCocoa.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A146930126DCFFE00992F94 /* ConsoleTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A14692F126DCFFE00992F94 /* ConsoleTextView.m */; };
-		3A2947951271F8E500B31B0C /* NodeJSBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A2947931271F8E500B31B0C /* NodeJSBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A2948AD1273161D00B31B0C /* NS-additions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A7CA6891266638F002158A5 /* NS-additions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A2948BE1273165D00B31B0C /* NS-additions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA68A1266638F002158A5 /* NS-additions.mm */; };
+		3A2948C11273166000B31B0C /* NSData-additions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA6881266638F002158A5 /* NSData-additions.mm */; };
 		3A7CA6A81266649C002158A5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CA6A71266649C002158A5 /* MainMenu.xib */; };
 		3A7CA6AB126664F4002158A5 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CA6AA126664EB002158A5 /* main.js */; };
 		3A7CA6AE1266F55D002158A5 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA6AD1266F55D002158A5 /* AppDelegate.mm */; };
@@ -44,8 +45,6 @@
 		3A9629E612708EA700C19FB2 /* NodeJSScript.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9629E412708EA700C19FB2 /* NodeJSScript.mm */; };
 		3A962A6912709B0800C19FB2 /* NodeJSFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A962A6712709B0800C19FB2 /* NodeJSFunction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A962A6A12709B0800C19FB2 /* NodeJSFunction.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A962A6812709B0800C19FB2 /* NodeJSFunction.mm */; };
-		3ABA18F6126C50F000753966 /* NSObjectProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3ABA18F4126C50F000753966 /* NSObjectProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3ABA1991126C642200753966 /* NodeJSProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3ABA198F126C642200753966 /* NodeJSProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AE7CC1F1269C6DC00FEB40E /* NodeJS.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AE7CC1D1269C6DC00FEB40E /* NodeJS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AE7CC201269C6DC00FEB40E /* NodeJS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3AE7CC1E1269C6DC00FEB40E /* NodeJS.mm */; };
 		3AE7CC691269CA2A00FEB40E /* NodeCocoa.framework in Copy frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NodeCocoa.framework */; };
@@ -66,13 +65,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3A1467EA126DB19A00992F94 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3A1467E7126DB19500992F94;
-			remoteInfo = libffi;
-		};
 		3AE7CC3E1269C77800FEB40E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -115,13 +107,9 @@
 		3A146872126DB92500992F94 /* NodeCocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeCocoa.h; sourceTree = "<group>"; };
 		3A14692E126DCFFE00992F94 /* ConsoleTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleTextView.h; sourceTree = "<group>"; };
 		3A14692F126DCFFE00992F94 /* ConsoleTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleTextView.m; sourceTree = "<group>"; };
-		3A2947931271F8E500B31B0C /* NodeJSBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJSBlock.h; sourceTree = "<group>"; };
-		3A2947941271F8E500B31B0C /* NodeJSBlock.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJSBlock.mm; sourceTree = "<group>"; };
-		3A7CA6861266638F002158A5 /* NS+node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NS+node.h"; sourceTree = "<group>"; };
-		3A7CA6871266638F002158A5 /* NSData+node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+node.h"; sourceTree = "<group>"; };
-		3A7CA6881266638F002158A5 /* NSData+node.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSData+node.mm"; sourceTree = "<group>"; };
-		3A7CA6891266638F002158A5 /* NSObject+v8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+v8.h"; sourceTree = "<group>"; };
-		3A7CA68A1266638F002158A5 /* NSObject+v8.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSObject+v8.mm"; sourceTree = "<group>"; };
+		3A7CA6881266638F002158A5 /* NSData-additions.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSData-additions.mm"; sourceTree = "<group>"; };
+		3A7CA6891266638F002158A5 /* NS-additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NS-additions.h"; sourceTree = "<group>"; };
+		3A7CA68A1266638F002158A5 /* NS-additions.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NS-additions.mm"; sourceTree = "<group>"; };
 		3A7CA68B1266638F002158A5 /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
 		3A7CA69712666440002158A5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A7CA69812666440002158A5 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
@@ -159,10 +147,6 @@
 		3A9629E412708EA700C19FB2 /* NodeJSScript.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJSScript.mm; sourceTree = "<group>"; };
 		3A962A6712709B0800C19FB2 /* NodeJSFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJSFunction.h; sourceTree = "<group>"; };
 		3A962A6812709B0800C19FB2 /* NodeJSFunction.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJSFunction.mm; sourceTree = "<group>"; };
-		3ABA18F4126C50F000753966 /* NSObjectProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectProxy.h; sourceTree = "<group>"; };
-		3ABA18F5126C50F000753966 /* NSObjectProxy.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSObjectProxy.mm; sourceTree = "<group>"; };
-		3ABA198F126C642200753966 /* NodeJSProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJSProxy.h; sourceTree = "<group>"; };
-		3ABA1990126C642200753966 /* NodeJSProxy.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJSProxy.mm; sourceTree = "<group>"; };
 		3AE7CC1D1269C6DC00FEB40E /* NodeJS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJS.h; sourceTree = "<group>"; };
 		3AE7CC1E1269C6DC00FEB40E /* NodeJS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJS.mm; sourceTree = "<group>"; };
 		3AE7CC801269CB6400FEB40E /* libnode.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnode.a; path = deps/node/build/default/libnode.a; sourceTree = "<group>"; };
@@ -195,7 +179,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A14685A126DB75B00992F94 /* libffi.a in Frameworks */,
 				3AE7CC831269CB6400FEB40E /* libv8.a in Frameworks */,
 				3AE7CC821269CB6400FEB40E /* libnode.a in Frameworks */,
 				3AE7CE5C1269D7C300FEB40E /* libdl.dylib in Frameworks */,
@@ -286,17 +269,9 @@
 				3A9629E412708EA700C19FB2 /* NodeJSScript.mm */,
 				3A962A6712709B0800C19FB2 /* NodeJSFunction.h */,
 				3A962A6812709B0800C19FB2 /* NodeJSFunction.mm */,
-				3A2947931271F8E500B31B0C /* NodeJSBlock.h */,
-				3A2947941271F8E500B31B0C /* NodeJSBlock.mm */,
-				3ABA198F126C642200753966 /* NodeJSProxy.h */,
-				3ABA1990126C642200753966 /* NodeJSProxy.mm */,
-				3ABA18F4126C50F000753966 /* NSObjectProxy.h */,
-				3ABA18F5126C50F000753966 /* NSObjectProxy.mm */,
-				3A7CA6861266638F002158A5 /* NS+node.h */,
-				3A7CA6871266638F002158A5 /* NSData+node.h */,
-				3A7CA6881266638F002158A5 /* NSData+node.mm */,
-				3A7CA6891266638F002158A5 /* NSObject+v8.h */,
-				3A7CA68A1266638F002158A5 /* NSObject+v8.mm */,
+				3A7CA6891266638F002158A5 /* NS-additions.h */,
+				3A7CA68A1266638F002158A5 /* NS-additions.mm */,
+				3A7CA6881266638F002158A5 /* NSData-additions.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -373,12 +348,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A146879126DBA7A00992F94 /* NodeCocoa.h in Headers */,
-				3ABA1991126C642200753966 /* NodeJSProxy.h in Headers */,
+				3A2948AD1273161D00B31B0C /* NS-additions.h in Headers */,
+				3AE7CC1F1269C6DC00FEB40E /* NodeJS.h in Headers */,
 				3A9629E512708EA700C19FB2 /* NodeJSScript.h in Headers */,
 				3A962A6912709B0800C19FB2 /* NodeJSFunction.h in Headers */,
-				3A2947951271F8E500B31B0C /* NodeJSBlock.h in Headers */,
-				3ABA18F6126C50F000753966 /* NSObjectProxy.h in Headers */,
-				3AE7CC1F1269C6DC00FEB40E /* NodeJS.h in Headers */,
 				3A835703126A5E8C0058174F /* node_buffer.h in Headers */,
 				3A835704126A5E8C0058174F /* node_cares.h in Headers */,
 				3A835705126A5E8C0058174F /* node_child_process.h in Headers */,
@@ -460,7 +433,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				3A1467EB126DB19A00992F94 /* PBXTargetDependency */,
 			);
 			name = NodeCocoa;
 			productInstallPath = "$(HOME)/Library/Frameworks";
@@ -522,7 +494,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp -v \"$PROJECT_DIR/deps/libffi/.libs/libffi.a\" \"$PROJECT_DIR/deps/libffi/libffi.a\"\nrm -fv \"$PROJECT_DIR/deps/libffi/.libs/\"*.dylib";
+			shellScript = "if [ -f \"$PROJECT_DIR/deps/libffi/.libs/libffi.a\" ]; then\n  cp -v \"$PROJECT_DIR/deps/libffi/.libs/libffi.a\" \"$PROJECT_DIR/deps/libffi/libffi.a\"\n  rm -fv \"$PROJECT_DIR/deps/libffi/.libs/\"*.dylib\nfi";
 		};
 		3ABA182E126C2F6900753966 /* Transpose header search paths */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -558,17 +530,14 @@
 				3AE7CC201269C6DC00FEB40E /* NodeJS.mm in Sources */,
 				3A9629E612708EA700C19FB2 /* NodeJSScript.mm in Sources */,
 				3A962A6A12709B0800C19FB2 /* NodeJSFunction.mm in Sources */,
+				3A2948BE1273165D00B31B0C /* NS-additions.mm in Sources */,
+				3A2948C11273166000B31B0C /* NSData-additions.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3A1467EB126DB19A00992F94 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3A1467E7126DB19500992F94 /* libffi */;
-			targetProxy = 3A1467EA126DB19A00992F94 /* PBXContainerItemProxy */;
-		};
 		3AE7CC3F1269C77800FEB40E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8DC2EF4F0486A6940098B216 /* NodeCocoa */;
@@ -581,6 +550,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -615,6 +585,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -696,6 +667,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -722,6 +694,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;

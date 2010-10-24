@@ -1,5 +1,6 @@
 #import "NodeJSFunction.h"
 #import "NodeJS.h"
+#import "NS-additions.h"
 
 using namespace v8;
 
@@ -18,21 +19,9 @@ using namespace v8;
       *error = [NSError nodeErrorWithLocalizedDescription:@"empty source"];
     return nil;
   }
-  if (![source hasPrefix:@"function"]) {
-    // support convenience syntaxes:
-    //   "(arg1, arg2){ body }", "{ body }", "body"
-    unichar ch0 = [source characterAtIndex:0];
-    if (ch0 != '(') {
-      if (ch0 != '{') {
-        source = [NSString stringWithFormat:@"function(){%@}", source];
-      } else {
-        source = [@"function()" stringByAppendingString:source];
-      }
-    } else {
-      source = [@"function" stringByAppendingString:source];
-    }
+  if ([source hasPrefix:@"function"]) {
+    source = [NSString stringWithFormat:@"(%@)", source];
   }
-  source = [NSString stringWithFormat:@"(%@)", source];
   // Compile
   Local<Value> result =
       [NodeJS eval:source origin:origin context:context error:error];
@@ -141,7 +130,8 @@ static v8::Handle<Value> _InvocationProxy(const Arguments& args) {
 }
 
 
-- (v8::Local<v8::Value>)functionValue {
+// NSObject v8 additions implementation
+- (v8::Local<v8::Value>)v8Value {
   HandleScope scope;
   return scope.Close(Local<Value>(*function_));
 }
@@ -207,6 +197,14 @@ static v8::Handle<Value> _InvocationProxy(const Arguments& args) {
   if (r.IsEmpty())
     NSLog(@"error in %s: %@", __PRETTY_FUNCTION__, error);
   return scope.Close(r);
+}
+
+
+- (NSString*)description {
+  if (!function_.IsEmpty())
+    return [NSString stringWithV8String:function_->ToString()];
+  else
+    return [[NSNull null] description];
 }
 
 @end

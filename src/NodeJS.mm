@@ -13,72 +13,6 @@ inline const char* ToCString(const v8::String::Utf8Value& value) {
   return *value ? *value : "<str conversion failed>";
 }
 
-// This function come from the Node.js project. Please see deps/node/LICENSE.
-static void ReportException(TryCatch &try_catch, bool show_line) {
-  v8::Handle<Message> message = try_catch.Message();
-
-  node::Stdio::DisableRawMode(STDIN_FILENO);
-  fprintf(stderr, "\n");
-
-  if (show_line && !message.IsEmpty()) {
-    // Print (filename):(line number): (message).
-    String::Utf8Value filename(message->GetScriptResourceName());
-    const char* filename_string = ToCString(filename);
-    int linenum = message->GetLineNumber();
-    fprintf(stderr, "%s:%i\n", filename_string, linenum);
-    // Print line of source code.
-    String::Utf8Value sourceline(message->GetSourceLine());
-    const char* sourceline_string = ToCString(sourceline);
-
-    // HACK HACK HACK
-    //
-    // FIXME
-    //
-    // Because of how CommonJS modules work, all scripts are wrapped with a
-    // "function (function (exports, __filename, ...) {"
-    // to provide script local variables.
-    //
-    // When reporting errors on the first line of a script, this wrapper
-    // function is leaked to the user. This HACK is to remove it. The length
-    // of the wrapper is 62. That wrapper is defined in src/node.js
-    //
-    // If that wrapper is ever changed, then this number also has to be
-    // updated. Or - someone could clean this up so that the two peices
-    // don't need to be changed.
-    //
-    // Even better would be to get support into V8 for wrappers that
-    // shouldn't be reported to users.
-    int offset = linenum == 1 ? 62 : 0;
-
-    fprintf(stderr, "%s\n", sourceline_string + offset);
-    // Print wavy underline (GetUnderline is deprecated).
-    int start = message->GetStartColumn();
-    for (int i = offset; i < start; i++) {
-      fprintf(stderr, " ");
-    }
-    int end = message->GetEndColumn();
-    for (int i = start; i < end; i++) {
-      fprintf(stderr, "^");
-    }
-    fprintf(stderr, "\n");
-  }
-
-  String::Utf8Value trace(try_catch.StackTrace());
-
-  if (trace.length() > 0) {
-    fprintf(stderr, "%s\n", *trace);
-  } else {
-    // this really only happens for RangeErrors, since they're the only
-    // kind that won't have all this info in the trace.
-    Local<Value> er = try_catch.Exception();
-    String::Utf8Value msg(!er->IsObject() ? er->ToString()
-                         : er->ToObject()->Get(String::New("message"))->ToString());
-    fprintf(stderr, "%s\n", *msg);
-  }
-
-  fflush(stderr);
-}
-
 
 static NSString *ExceptionToNSString(Local<Value> &er) {
   if (er.IsEmpty()) return [NSString stringWithString:@"undefined"];
@@ -90,14 +24,17 @@ static NSString *ExceptionToNSString(Local<Value> &er) {
 
 
 static NSMutableDictionary* TryCatchToErrorDict(TryCatch &try_catch) {
-  v8::Handle<Message> message = try_catch.Message();
   NSMutableDictionary* info = [NSMutableDictionary dictionary];
+  v8::Handle<Message> message = try_catch.Message();
   if (!message.IsEmpty()) {
     String::Utf8Value filename(message->GetScriptResourceName());
     [info setObject:[NSString stringWithUTF8String:ToCString(filename)]
              forKey:@"filename"];
     [info setObject:[NSNumber numberWithInt:message->GetLineNumber()]
              forKey:@"lineno"];
+    String::Utf8Value sourceline(message->GetSourceLine());
+    [info setObject:[NSString stringWithUTF8String:ToCString(sourceline)]
+             forKey:@"sourceline"];
   }
   String::Utf8Value trace(try_catch.StackTrace());
   if (trace.length() > 0) {
@@ -122,12 +59,12 @@ using namespace v8;
 static Persistent<Context> gMainContext;
 static int gTerminationState = 0; // 0=running, 1=exit-deferred, 2=exit-asap
 
-// ev_loop until no more queued events
+// ev_run until no more queued events
 static void PumpNode() {
-  ev_now_update();  // Bring the clock forward since the last ev_loop().
-  ev_loop(EV_DEFAULT_UC_ EVLOOP_NONBLOCK);
+  ev_now_update();  // Bring the clock forward since the last ev_run().
+  ev_run(EV_DEFAULT_UC_ EVLOOP_NONBLOCK);
   while(ev_loop_fdchangecount() != 0) {
-    ev_loop(EV_DEFAULT_UC_ EVLOOP_NONBLOCK);
+    ev_run(EV_DEFAULT_UC_ EVLOOP_NONBLOCK);
   }
 }
 
@@ -156,26 +93,8 @@ static Local<Value> _NodeEval(v8::Handle<String> source,
 }
 
 
-// objcSendMessage(target, "errorWithMessage:code:", "A message", 123)
-static v8::Handle<Value> host_objcSendMessage(const Arguments& args) {
-  HandleScope scope;
-  
-  /*if (args.Length() < 1 || !args[0]->IsString()) {
-    return ThrowException(Exception::Error(String::New("Bad argument")));
-  }
-  
-  String::Utf8Value selectorSignature(args[0]->ToString());
-  
-  SEL sel = sel_registerName(*selectorSignature);*/
-  
-  return Undefined();
-}
-
-
 // called when node has been setup and is about to enter its runloop
 static void NodeMain(const Arguments& args) {
-  NSLog(@"NodeMain");
-  
   // Keep a reference to the main module's context
   gMainContext = Persistent<Context>::New(Context::GetCurrent());
 
@@ -301,8 +220,10 @@ int NodeJSApplicationMain(int argc, const char** argv) {
   // implementation of [NodeJS eval:name:error:] for an example.
   setenv("NODE_MODULE_CONTEXTS", "1", 1);
   
-  // set/extend module search path to <bundle>/Contents/Resources/lib
+  // set module search path to <mainbundle>/Contents/Resources/lib
   if (resourcePath) {
+    // TODO: respect v8 arguments -- currently they are moved to after main.js
+    //       thus not causing any effect.
     NSString *libPath = [resourcePath stringByAppendingPathComponent:@"lib"];
     char *node_path = getenv("NODE_PATH");
     if (node_path != NULL)
@@ -314,7 +235,7 @@ int NodeJSApplicationMain(int argc, const char** argv) {
   int rc = node::Start(argc+1, (char**)argv2);
   
   // we will probably never get here
-  free(argv2);
+  MemAlloc(argv2, 0);
   [pool drain];
   return rc;
 }
@@ -391,21 +312,18 @@ static NodeJS* sharedInstance_ = nil;
   return gMainContext;
 }
 
-+ (Local<Object>)hostObject {
-  // process.host
-  Local<Object> global = gMainContext->Global();
-  Local<Object> process =
-      Local<Object>::Cast(global->Get(String::NewSymbol("process")));
-  if (!process.IsEmpty()) {
-    Local<Value> v = process->Get(String::NewSymbol("host"));
-    assert(v->IsObject());
-    return Local<Object>::Cast(v);
-  }
-  return Local<Object>();
+static Persistent<String> process_symbol;
+
++ (Local<Object>)process {
+  HandleScope scope;
+  if (process_symbol.IsEmpty())
+    process_symbol = NODE_PSYMBOL("process");
+  Local<Value> process = gMainContext->Global()->Get(process_symbol);
+  return scope.Close(Local<Object>::Cast(process));
 }
 
-+ (void)setHostObject:(NSObject*)hostObject {
-  /*Local<Object> global = gMainContext->Global();
+/*+ (void)setHostObject:(NSObject*)hostObject {
+  Local<Object> global = gMainContext->Global();
   Local<Object> process =
       Local<Object>::Cast(global->Get(String::NewSymbol("process")));
   if (!process.IsEmpty()) {
@@ -421,8 +339,8 @@ static NodeJS* sharedInstance_ = nil;
       NSLog(@"in configuredByBlock");
     }];
     process->Set(String::NewSymbol("host"), host);
-  }*/
-}
+  }
+}*/
 
 + (Local<v8::Script>)compile:(NSString*)source
                       origin:(NSString*)origin
@@ -446,6 +364,10 @@ static NodeJS* sharedInstance_ = nil;
   if (script.IsEmpty() && error) {
     if (try_catch.HasCaught()) {
       *error = [NSError errorFromV8TryCatch:try_catch];
+      if (!try_catch.CanContinue()) {
+        NSLog(@"fatal: %@", *error);
+        exit(3);
+      }
     } else {
       *error = [NSError nodeErrorWithLocalizedDescription:@"internal error"];
     }
@@ -468,8 +390,13 @@ static NodeJS* sharedInstance_ = nil;
   if (!script.IsEmpty()) {
     TryCatch try_catch;
     result = script->Run();
-    if (result.IsEmpty() && error)
+    if (result.IsEmpty() && error) {
       *error = [NSError errorFromV8TryCatch:try_catch];
+      if (try_catch.HasCaught() && !try_catch.CanContinue()) {
+        NSLog(@"fatal: %@", *error);
+        exit(3);
+      }
+    }
   }
   return scope.Close(result);
 }

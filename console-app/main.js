@@ -1,5 +1,5 @@
 // export all public members of |sys| to |global|
-var sys = require('sys');
+var sys = require('util');
 Object.keys(sys).forEach(function(k){ global[k] = sys[k] });
 
 if (typeof process.stdout === 'number') {

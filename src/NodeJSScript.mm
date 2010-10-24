@@ -1,5 +1,6 @@
 #import "NodeJSScript.h"
 #import "NodeJS.h"
+#import "NS-additions.h"
 
 using namespace v8;
 
@@ -57,6 +58,14 @@ using namespace v8;
     script_.Clear();
   }
   [super dealloc];
+}
+
+
+- (NSString*)description {
+  if (!script_.IsEmpty())
+    return [NSString stringWithV8String:script_->Id()->ToDetailString()];
+  else
+    return [[NSNull null] description];
 }
 
 

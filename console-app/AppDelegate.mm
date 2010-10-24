@@ -1,11 +1,13 @@
 #import "AppDelegate.h"
 #import <NodeCocoa/NodeCocoa.h>
 
+#define ENABLE_REDIRECT_STDERR 1
+
 using namespace v8;
 
 @implementation AppDelegate
 
-static Persistent<Function> kSysInspectFunction;
+static Persistent<Function> kInspectFunction;
 static NSString* kLinePrefixFormat = @"HH:mm:ss > ";
 static NSColor* kInputLineColor = nil;
 static NSAttributedString* kNewlineAttrStr = nil;
@@ -112,8 +114,6 @@ static NSDictionary *kInputStringAttributes,
 - (void)applicationWillFinishLaunching:(NSNotification *)notification {
   NSLog(@"applicationWillFinishLaunching");
   
-  [NodeJS setHostObject:self];
-  
   // Get the global "process" object
   Local<Object> process = Local<Object>::Cast(
       Context::GetCurrent()->Global()->Get(String::NewSymbol("process")));
@@ -128,7 +128,7 @@ static NSDictionary *kInputStringAttributes,
       object:pipeReadHandle];
   [pipeReadHandle readInBackgroundAndNotify];
   
-  return;
+#if ENABLE_REDIRECT_STDERR
   // redirect stderr to a pipe
   // Alternative 1: Might cause funky crashes if NSLog is invoked at an
   // inapropriate time (e.g. during reading of stderr).
@@ -145,6 +145,7 @@ static NSDictionary *kInputStringAttributes,
       name:NSFileHandleReadCompletionNotification
       object:pipeReadHandle];
   [pipeReadHandle readInBackgroundAndNotify];
+#endif // ENABLE_REDIRECT_STDERR
 }
 
 // string from data with best guess encoding (utf8, latin-1)
@@ -264,18 +265,12 @@ static NSDictionary *kInputStringAttributes,
   NSError *error;
   
   // Aquire reference to sys.inspect
-  if (kSysInspectFunction.IsEmpty()) {
+  if (kInspectFunction.IsEmpty()) {
     HandleScope scope;
-    Local<Value> result = [NodeJS eval:@"require('sys').inspect"
-                                origin:@"<internal>"
-                               context:nil
-                                 error:&error];
-    if (result.IsEmpty() || !result->IsFunction()) {
-      NSLog(@"failed to look up sys.inspect: %@", error);
-    } else {
-      kSysInspectFunction =
-          Persistent<Function>::New(Local<Function>::Cast(result));
-    }
+    Local<Value> result = [NodeJS eval:@"require('util').inspect"
+                                origin:nil context:nil error:nil];
+    kInspectFunction =
+        Persistent<Function>::New(Local<Function>::Cast(result));
   }
 
   // Prepare input
@@ -307,7 +302,7 @@ static NSDictionary *kInputStringAttributes,
     [self appendLine:[error localizedDescription]
           attributes:kErrorStringAttributes];
   } else if (!result->IsUndefined()) {
-    result = kSysInspectFunction->Call(kSysInspectFunction, 1, &result);
+    result = kInspectFunction->Call(kInspectFunction, 1, &result);
     String::Utf8Value utf8str(result->ToString());
     [self appendLine:[NSString stringWithUTF8String:*utf8str]
           attributes:kResultStringAttributes];
@@ -402,7 +397,9 @@ static NSDictionary *kInputStringAttributes,
           [self eval:evalLine];
           [textStorage appendAttributedString:[isa linePrefix]];
         }
-        [[scrollView_ documentView] scrollToEndOfDocument:self];
+        [[scrollView_ documentView] performSelector:@selector(scrollToEndOfDocument:) 
+                                         withObject:self
+                                         afterDelay:0.01];
         [textView_ setSelectedRange:NSMakeRange(textStorage.length, 0)];
       }
     }
@@ -491,49 +488,25 @@ static NSDictionary *kInputStringAttributes,
 
 //-----------------------
 
-- (void)_testReadDirAsync {
-  static NodeJSFunction *readAsyncFunc = nil;
-  if (!readAsyncFunc) {
-    readAsyncFunc = [[NodeJSFunction functionFromString:
-        @"function readAsyncTest(callback){"
-          @"require('fs').readdir('/',"
-            @"callback"
-            //@"function(err, files) {"
-            //@"console.log('fs.readdir called back: '+"
-            //    @"inspect(Array.prototype.slice.apply(arguments)) );"
-            //@"}"
-          @")"
-        @"}" error:nil] retain];
-  }
+static v8::Handle<v8::Value> readdirCallback(const Arguments& args){
   HandleScope scope;
-  
-  __block NodeJSFunction *callback;
-  callback = [[NodeJSFunction alloc] initWithBlock:^(const Arguments& args){
-    HandleScope scope;
-    Local<Value> result = Local<Value>::New(Undefined());
-    if (callback) {
-      // your code here, which possibly sets |result|
-      [callback release]; callback = nil;
-    }
-    return v8::Handle<v8::Value>(scope.Close(result));
-  }];
-  v8::Local<Value> argv[] = { callback.functionValue };
-  [readAsyncFunc callWithV8Arguments:argv count:1 error:nil];
-  //[callback call];
-  
-  /* Convenience: appending a block callback as last argument
-  [fun callWithV8Arguments:argv count:1 error:nil callback:^(const Arguments& args){
-    NSLog(@"fs.readdir called back with %d arguments", args.Length());
-  }];
-  [fun callWithCallback:^(const Arguments& args){
-    NSLog(@"fs.readdir called back with %d arguments", args.Length());
-  }];*/
-  
-  // ref test
-  /*Local<Value> data = External::Wrap((void*)self);
-  Local<Function> fun = FunctionTemplate::New(&Handler, data)->GetFunction();
-  Local<Value> argv2[] = { fun };
-  [readAsyncFunc callWithV8Arguments:argv2 count:1 error:nil];*/
+  NSLog(@"readdir returned");
+  return Undefined();
+}
+
+- (void)_testAsync {
+  HandleScope scope;
+  static NodeJSFunction *readdirFunc = nil;
+  if (!readdirFunc) {
+    readdirFunc = [[NodeJSFunction functionFromString:@"require('fs').readdir"
+                                                error:nil] retain];
+    //NSLog(@"%@", [NSObject fromV8Value:readdirFunc.v8Value]);
+  }
+  Local<Value> argv[] = {
+    String::New("/"),
+    [NodeJSFunction functionWithCFunction:&readdirCallback].v8Value
+  };
+  Local<Value> r = [readdirFunc callWithV8Arguments:argv count:2 error:nil];
 }
 
 - (void)consoleTextViewArrowUpKeyEvent:(NSEvent*)event {
@@ -564,7 +537,31 @@ static NSDictionary *kInputStringAttributes,
   Local<Value> argv[] = { v8::Integer::New([event keyCode]) };
   [func callWithV8Arguments:argv count:1 error:nil];
   
-  [self _testReadDirAsync];
+  //[self _testAsync];
+  
+  /* test type conversion:
+  NSError *error;
+  Local<Value> v = [NodeJS eval:
+    @"({key: 'str', ls: [1.2, new Date, {k:'v'}], foo: {'0':'00', '1':'11'}})"
+                         origin:nil context:nil error:&error];
+  if (v.IsEmpty()) {
+    NSLog(@"eval: %@", error);
+    return;
+  }
+  
+  // v8 --> Cocoa
+  NSObject *obj = [NSObject fromV8Value:v];
+  NSLog(@"v8 -> cocoa: %@", obj);
+  
+  // Cocoa --> v8
+  v = [obj v8Value];
+  assert(!v.IsEmpty());
+  Local<Value> printv = [NodeJS eval:@"(function(x) {"
+        @"var u = require('util');"
+        @"u.error('cocoa -> v8: ' + u.inspect(x));"
+      @"})" origin:nil context:nil error:nil];
+  assert(!printv.IsEmpty());
+  Local<Function>::Cast(printv)->Call(Context::GetCurrent()->Global(), 1, &v);*/
 }
 
 - (void)consoleTextViewArrowDownKeyEvent:(NSEvent*)event {
