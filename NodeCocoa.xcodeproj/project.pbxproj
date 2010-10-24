@@ -573,8 +573,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/deps/node/build/default\"",
-					"\"$(SRCROOT)/deps/libffi/.libs\"",
-					"\"$(SRCROOT)/deps/libffi\"",
 				);
 				PRODUCT_NAME = NodeCocoa;
 				WRAPPER_EXTENSION = framework;
@@ -608,8 +606,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/deps/node/build/default\"",
-					"\"$(SRCROOT)/deps/libffi/.libs\"",
-					"\"$(SRCROOT)/deps/libffi\"",
 				);
 				PRODUCT_NAME = NodeCocoa;
 				WRAPPER_EXTENSION = framework;
