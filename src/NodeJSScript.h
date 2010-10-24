@@ -5,6 +5,8 @@
   v8::Persistent<v8::Script> script_;
 }
 
+@property(readonly, nonatomic) const v8::Persistent<v8::Script> &script;
+
 /// Compile a script from JavaScript source code
 + (NodeJSScript*)compiledScriptFromSource:(NSString*)source
                                    origin:(NSString*)origin

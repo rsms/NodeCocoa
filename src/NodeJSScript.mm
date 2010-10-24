@@ -61,6 +61,11 @@ using namespace v8;
 }
 
 
+- (const v8::Persistent<v8::Script> &)script {
+  return script_;
+}
+
+
 - (NSString*)description {
   if (!script_.IsEmpty())
     return [NSString stringWithV8String:script_->Id()->ToDetailString()];
