@@ -51,15 +51,10 @@
 		3AE7CC821269CB6400FEB40E /* libnode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CC801269CB6400FEB40E /* libnode.a */; };
 		3AE7CC831269CB6400FEB40E /* libv8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CC811269CB6400FEB40E /* libv8.a */; };
 		3AE7CCBF1269CC9400FEB40E /* NodeCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NodeCocoa.framework */; };
-		3AE7CD801269D75900FEB40E /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CD7F1269D75900FEB40E /* libssl.dylib */; };
 		3AE7CD821269D76B00FEB40E /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CD7F1269D75900FEB40E /* libssl.dylib */; };
-		3AE7CD891269D77E00FEB40E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CD881269D77E00FEB40E /* Carbon.framework */; };
 		3AE7CD8E1269D78700FEB40E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CD881269D77E00FEB40E /* Carbon.framework */; };
-		3AE7CE4C1269D79700FEB40E /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE4B1269D79700FEB40E /* libcrypto.dylib */; };
 		3AE7CE4E1269D79B00FEB40E /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE4B1269D79700FEB40E /* libcrypto.dylib */; };
-		3AE7CE531269D7AD00FEB40E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE521269D7AD00FEB40E /* libz.dylib */; };
 		3AE7CE551269D7B000FEB40E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE521269D7AD00FEB40E /* libz.dylib */; };
-		3AE7CE5A1269D7C000FEB40E /* libdl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE591269D7C000FEB40E /* libdl.dylib */; };
 		3AE7CE5C1269D7C300FEB40E /* libdl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE7CE591269D7C000FEB40E /* libdl.dylib */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -167,11 +162,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3AE7CCBF1269CC9400FEB40E /* NodeCocoa.framework in Frameworks */,
-				3AE7CD801269D75900FEB40E /* libssl.dylib in Frameworks */,
-				3AE7CD891269D77E00FEB40E /* Carbon.framework in Frameworks */,
-				3AE7CE4C1269D79700FEB40E /* libcrypto.dylib in Frameworks */,
-				3AE7CE531269D7AD00FEB40E /* libz.dylib in Frameworks */,
-				3AE7CE5A1269D7C000FEB40E /* libdl.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,7 +437,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "NodeCocoa" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* NodeThread */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
@@ -675,6 +672,10 @@
 				INFOPLIST_FILE = "console-app/Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/deps/node/build/default\"",
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -701,6 +702,10 @@
 				INFOPLIST_FILE = "console-app/Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/deps/node/build/default\"",
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
