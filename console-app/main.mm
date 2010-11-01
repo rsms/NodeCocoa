@@ -2,5 +2,8 @@
 #import <NodeCocoa/NodeCocoa.h>
 
 int main(int argc, char *argv[]) {
-  return NodeJSApplicationMain(argc, (const char **)argv);
+  NSAutoreleasePool* pool = [NSAutoreleasePool new];
+  [NodeJSThread detachNewNodeJSThreadRunningScript:@"main.js"];
+  return NSApplicationMain(argc, (const char **)argv);
+  [pool drain];
 }

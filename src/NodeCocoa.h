@@ -30,6 +30,7 @@
 #endif
 
 #import <NodeCocoa/NodeJS.h>
+#import <NodeCocoa/NodeJSThread.h>
 #import <NodeCocoa/NodeJSScript.h>
 #import <NodeCocoa/NodeJSFunction.h>
 #import <NodeCocoa/NS-additions.h>

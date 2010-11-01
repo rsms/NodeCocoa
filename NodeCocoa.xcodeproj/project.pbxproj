@@ -41,6 +41,8 @@
 		3A835731126A5F040058174F /* v8-debug.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A83572E126A5F040058174F /* v8-debug.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A835732126A5F040058174F /* v8-profiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A83572F126A5F040058174F /* v8-profiler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A835733126A5F040058174F /* v8.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A835730126A5F040058174F /* v8.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A8E3E1E12747E67008453B1 /* NodeJSThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A8E3E1C12747E67008453B1 /* NodeJSThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A8E3E1F12747E67008453B1 /* NodeJSThread.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A8E3E1D12747E67008453B1 /* NodeJSThread.mm */; };
 		3A9629E512708EA700C19FB2 /* NodeJSScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A9629E312708EA700C19FB2 /* NodeJSScript.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A9629E612708EA700C19FB2 /* NodeJSScript.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A9629E412708EA700C19FB2 /* NodeJSScript.mm */; };
 		3A962A6912709B0800C19FB2 /* NodeJSFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A962A6712709B0800C19FB2 /* NodeJSFunction.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -143,6 +145,8 @@
 		3A83572E126A5F040058174F /* v8-debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "v8-debug.h"; path = "deps/node/deps/v8/include/v8-debug.h"; sourceTree = "<group>"; };
 		3A83572F126A5F040058174F /* v8-profiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "v8-profiler.h"; path = "deps/node/deps/v8/include/v8-profiler.h"; sourceTree = "<group>"; };
 		3A835730126A5F040058174F /* v8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = v8.h; path = deps/node/deps/v8/include/v8.h; sourceTree = "<group>"; };
+		3A8E3E1C12747E67008453B1 /* NodeJSThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJSThread.h; sourceTree = "<group>"; };
+		3A8E3E1D12747E67008453B1 /* NodeJSThread.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJSThread.mm; sourceTree = "<group>"; };
 		3A9629E312708EA700C19FB2 /* NodeJSScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJSScript.h; sourceTree = "<group>"; };
 		3A9629E412708EA700C19FB2 /* NodeJSScript.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeJSScript.mm; sourceTree = "<group>"; };
 		3A962A6712709B0800C19FB2 /* NodeJSFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeJSFunction.h; sourceTree = "<group>"; };
@@ -263,6 +267,8 @@
 			children = (
 				3A7CA68B1266638F002158A5 /* prefix.pch */,
 				3A146872126DB92500992F94 /* NodeCocoa.h */,
+				3A8E3E1C12747E67008453B1 /* NodeJSThread.h */,
+				3A8E3E1D12747E67008453B1 /* NodeJSThread.mm */,
 				3AE7CC1D1269C6DC00FEB40E /* NodeJS.h */,
 				3AE7CC1E1269C6DC00FEB40E /* NodeJS.mm */,
 				3A9629E312708EA700C19FB2 /* NodeJSScript.h */,
@@ -350,6 +356,7 @@
 				3A146879126DBA7A00992F94 /* NodeCocoa.h in Headers */,
 				3A2948AD1273161D00B31B0C /* NS-additions.h in Headers */,
 				3AE7CC1F1269C6DC00FEB40E /* NodeJS.h in Headers */,
+				3A8E3E1E12747E67008453B1 /* NodeJSThread.h in Headers */,
 				3A9629E512708EA700C19FB2 /* NodeJSScript.h in Headers */,
 				3A962A6912709B0800C19FB2 /* NodeJSFunction.h in Headers */,
 				3A835703126A5E8C0058174F /* node_buffer.h in Headers */,
@@ -532,6 +539,7 @@
 				3A962A6A12709B0800C19FB2 /* NodeJSFunction.mm in Sources */,
 				3A2948BE1273165D00B31B0C /* NS-additions.mm in Sources */,
 				3A2948C11273166000B31B0C /* NSData-additions.mm in Sources */,
+				3A8E3E1F12747E67008453B1 /* NodeJSThread.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,12 +1,80 @@
 #import "NS-additions.h"
 #import "NodeJSFunction.h"
+#import <err.h>
 #import <node_buffer.h>
+#import <vector>
 
 using namespace v8;
 
+static Local<Value> _NodeEval(v8::Handle<String> source,
+                              v8::Handle<String> name) {
+  HandleScope scope;
+  Local<v8::Script> script = v8::Script::Compile(source, name);
+  Local<Value> result;
+  if (!script.IsEmpty()) result = script->Run();
+  return scope.Close(result);
+}
+
+
+class BuildContext {
+ public:
+  static Persistent<Function> indexOf;
+  
+  Persistent<Array> values;
+  int depth;
+  std::vector<NSObject*> objects;
+  
+  BuildContext() : depth(0) {
+    HandleScope scope;
+    if (indexOf.IsEmpty()) {
+      Local<Value> v = _NodeEval(String::New("Array.prototype.indexOf"),
+                                 String::NewSymbol("<string>"));
+      assert(!v.IsEmpty() && v->IsFunction());
+      indexOf = Persistent<Function>::New(Local<Function>::Cast(v));
+    }
+    values = Persistent<Array>::New(Array::New());
+  }
+  
+  ~BuildContext() {
+    values.Dispose();
+    values.Clear();
+  }
+  
+  class Scope {
+    BuildContext *bctx_;
+   public:
+    Scope(BuildContext *bctx) : bctx_(bctx) {
+      ++bctx_->depth;
+      if (bctx_->depth > 256)
+        errx(33, "fatal: depth limit hit in [NSObject fromV8Value]");
+    }
+    ~Scope() { --bctx_->depth; }
+  };
+  
+  NSObject *ObjectForValue(Local<Value> value) {
+    HandleScope scope;
+    Local<Value> v = indexOf->Call(values, 1, &value);
+    assert(!v.IsEmpty() && v->IsInt32());
+    int i = v->Int32Value();
+    if (i != -1) {
+      return objects[i];
+    }
+    return nil;
+  }
+  
+  void SetObjectForValue(NSObject* object, Local<Value> value) {
+    HandleScope scope;
+    values->Set(values->Length(), value);
+    objects.push_back(object);
+  }
+};
+
+Persistent<Function> BuildContext::indexOf;
+
 @implementation NSObject (v8)
 
-+ (id)fromV8Value:(v8::Local<v8::Value>)v {
++ (id)fromV8Value:(v8::Local<v8::Value>)v buildContext:(BuildContext*)bctx {
+  BuildContext::Scope bscope(bctx);
   if (v.IsEmpty()) return nil;
   if (v->IsUndefined() || v->IsNull()) return [NSNull null];
   if (v->IsBoolean()) return [NSNumber numberWithBool:v->BooleanValue()];
@@ -20,13 +88,23 @@ using namespace v8;
     return [NSString stringWithV8String:v->ToString()];
   if (v->IsFunction())
     return [NodeJSFunction functionWithFunction:Local<Function>::Cast(v)];
+
+  // Date --> NSDate
+  if (v->IsDate()) {
+    double ms = Local<Date>::Cast(v)->NumberValue();
+    return [NSDate dateWithTimeIntervalSince1970:ms/1000.0];
+  }
   
+  // Array --> NSArray
   if (v->IsArray()) {
+    NSObject *obj = bctx->ObjectForValue(v);
+    if (obj) return obj;
     Local<Array> a = Local<Array>::Cast(v);
     uint32 i = 0, count = a->Length();
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:count];
+    bctx->SetObjectForValue(array, v);
     for (; i < count; ++i) {
-      NSObject *obj = [self fromV8Value:a->Get(i)];
+      obj = [self fromV8Value:a->Get(i) buildContext:bctx];
       if (obj) [array addObject:obj];
     }
     return array;
@@ -34,29 +112,30 @@ using namespace v8;
   
   // node::Buffer --> NSData
   if (v->IsObject() && node::Buffer::HasInstance(v)) {
+    NSObject *obj = bctx->ObjectForValue(v);
+    if (obj) return obj;
     Local<Object> bufobj = v->ToObject();
     char* data = node::Buffer::Data(bufobj);
     size_t length = node::Buffer::Length(bufobj);
-    return [NSData dataWithBytes:data length:length];
-  }
-
-  // Date --> NSDate
-  if (v->IsDate()) {
-    double ms = Local<Date>::Cast(v)->NumberValue();
-    return [NSDate dateWithTimeIntervalSince1970:ms/1000.0];
+    NSData *nsdata = [NSData dataWithBytes:data length:length];
+    bctx->SetObjectForValue(nsdata, v);
+    return nsdata;
   }
 
   // Object --> Dictionary
   if (v->IsObject()) {
+    NSObject *obj = bctx->ObjectForValue(v);
+    if (obj) return obj;
     Local<Object> o = v->ToObject();
     Local<Array> props = o->GetPropertyNames();
     uint32 i = 0, count = props->Length();
     NSMutableDictionary* dict =
         [NSMutableDictionary dictionaryWithCapacity:count];
+    bctx->SetObjectForValue(dict, v);
     for (; i < count; ++i) {
       Local<String> k = props->Get(i)->ToString();
       NSString *kobj = [NSString stringWithV8String:k];
-      NSObject *vobj = [self fromV8Value:o->Get(k)];
+      NSObject *vobj = [self fromV8Value:o->Get(k) buildContext:bctx];
       if (vobj)
         [dict setObject:vobj forKey:kobj];
     }
@@ -64,6 +143,11 @@ using namespace v8;
   }
   
   return nil;
+}
+
++ (id)fromV8Value:(v8::Local<v8::Value>)v {
+  BuildContext bctx;
+  return [self fromV8Value:v buildContext:&bctx];
 }
 
 - (Local<Value>)v8Value {

@@ -3,14 +3,6 @@
 
 #import <NodeCocoa/node.h>
 
-/**
- * Program entry point -- replaces use of NSApplicationMain.
- *
- * Tip: You can utilize the NSApplication delegate method
- * |applicationWillFinishLaunching:| to perform environment setup if needed.
- */
-int NodeJSApplicationMain(int argc, const char** argv);
-
 #ifdef __OBJC__
 
 // NSError additions
@@ -83,6 +75,9 @@ extern const NSString* NodeJSNSErrorDomain;
                       origin:(NSString*)origin
                      context:(v8::Context*)context
                        error:(NSError**)error;
+
+/// Convenience function, sending errors to stderr
++ (v8::Local<v8::Value>)eval:(NSString*)source;
 
 @end
 

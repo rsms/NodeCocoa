@@ -1,7 +1,7 @@
 #import "AppDelegate.h"
 #import <NodeCocoa/NodeCocoa.h>
 
-#define ENABLE_REDIRECT_STDERR 1
+#define ENABLE_REDIRECT_STDERR 0
 
 using namespace v8;
 
@@ -111,41 +111,63 @@ static NSDictionary *kInputStringAttributes,
   [outputTextView_ setTextContainerInset:NSMakeSize(2.0, 4.0)];
 }
 
+
+static v8::Handle<Value> Foo(const Arguments& args) {
+  HandleScope scope;
+  Local<Value> r = [NodeJS eval:@"process"];
+  NSObject *process = [[NSObject fromV8Value:r] retain];
+  NSLog(@"hello from native Foo function");
+  CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopCommonModes, ^{
+    // Dumping this very complex structure causes a crash for some reason:
+    //NSLog(@"process -> %@", process);
+    [process release];
+  });
+  return Undefined();
+}
+
+
 - (void)applicationWillFinishLaunching:(NSNotification *)notification {
   NSLog(@"applicationWillFinishLaunching");
+  HandleScope scope;
+  NodeJSThread *nodeThread = [NodeJSThread mainNodeJSThread];
   
-  // Get the global "process" object
-  Local<Object> process = Local<Object>::Cast(
-      Context::GetCurrent()->Global()->Get(String::NewSymbol("process")));
-  
-  // redirect stdout to a pipe
-  nodeStdoutPipe_ = [[NSPipe pipe] retain];
-  NSFileHandle* pipeReadHandle = [nodeStdoutPipe_ fileHandleForReading];
-  dup2([[nodeStdoutPipe_ fileHandleForWriting] fileDescriptor], fileno(stdout));
-  [[NSNotificationCenter defaultCenter] addObserver:self
-      selector:@selector(stdoutReadCompletion:)
-      name:NSFileHandleReadCompletionNotification
-      object:pipeReadHandle];
-  [pipeReadHandle readInBackgroundAndNotify];
-  
-#if ENABLE_REDIRECT_STDERR
-  // redirect stderr to a pipe
-  // Alternative 1: Might cause funky crashes if NSLog is invoked at an
-  // inapropriate time (e.g. during reading of stderr).
-  nodeStderrPipe_ = [[NSPipe pipe] retain];
-  dup2([[nodeStderrPipe_ fileHandleForWriting] fileDescriptor], fileno(stderr));
-  // Alternative 2: Redirect stderr using custom code in our main.js.
-  // Pass our stderr pipe fd to node as |process._stderrfd|
-  //nodeStderrPipe_ = [[NSPipe pipe] retain];
-  //int fd = [[nodeStderrPipe_ fileHandleForWriting] fileDescriptor];
-  //process->ForceSet(String::New("_stderrfd"), Integer::New(fd));
-  pipeReadHandle = [nodeStderrPipe_ fileHandleForReading];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-      selector:@selector(stderrReadCompletion:)
-      name:NSFileHandleReadCompletionNotification
-      object:pipeReadHandle];
-  [pipeReadHandle readInBackgroundAndNotify];
-#endif // ENABLE_REDIRECT_STDERR
+  [nodeThread exportGlobalFunction:&Foo as:@"foo"];
+  //[nodeThread performBlock:^(NodeJSCallbackBlock cb){
+    
+    // Get the global "process" object
+    //Local<Object> process = Local<Object>::Cast(
+    //    Context::GetCurrent()->Global()->Get(String::NewSymbol("process")));
+    
+    // redirect stdout to a pipe
+    nodeStdoutPipe_ = [[NSPipe pipe] retain];
+    NSFileHandle* pipeReadHandle = [nodeStdoutPipe_ fileHandleForReading];
+    dup2([[nodeStdoutPipe_ fileHandleForWriting] fileDescriptor], fileno(stdout));
+    [[NSNotificationCenter defaultCenter] addObserver:self
+        selector:@selector(stdoutReadCompletion:)
+        name:NSFileHandleReadCompletionNotification
+        object:pipeReadHandle];
+    [pipeReadHandle readInBackgroundAndNotify];
+    
+  #if ENABLE_REDIRECT_STDERR
+    // redirect stderr to a pipe
+    // Alternative 1: Might cause funky crashes if NSLog is invoked at an
+    // inapropriate time (e.g. during reading of stderr).
+    nodeStderrPipe_ = [[NSPipe pipe] retain];
+    dup2([[nodeStderrPipe_ fileHandleForWriting] fileDescriptor], fileno(stderr));
+    // Alternative 2: Redirect stderr using custom code in our main.js.
+    // Pass our stderr pipe fd to node as |process._stderrfd|
+    //nodeStderrPipe_ = [[NSPipe pipe] retain];
+    //int fd = [[nodeStderrPipe_ fileHandleForWriting] fileDescriptor];
+    //process->ForceSet(String::New("_stderrfd"), Integer::New(fd));
+    pipeReadHandle = [nodeStderrPipe_ fileHandleForReading];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+        selector:@selector(stderrReadCompletion:)
+        name:NSFileHandleReadCompletionNotification
+        object:pipeReadHandle];
+    [pipeReadHandle readInBackgroundAndNotify];
+  #endif // ENABLE_REDIRECT_STDERR
+
+  //}]; // [nodeThread performBlock]
 }
 
 // string from data with best guess encoding (utf8, latin-1)
@@ -197,12 +219,18 @@ static NSDictionary *kInputStringAttributes,
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
   NSLog(@"applicationWillTerminate");
   if (nodeStdoutPipe_) {
-    [nodeStdoutPipe_.fileHandleForWriting synchronizeFile];
-    [nodeStdoutPipe_.fileHandleForReading synchronizeFile];
+    @try {
+      [nodeStdoutPipe_.fileHandleForWriting synchronizeFile];
+      [nodeStdoutPipe_.fileHandleForReading synchronizeFile];
+    } @catch (NSException *e) {
+    }
   }
   if (nodeStderrPipe_) {
-    [nodeStderrPipe_.fileHandleForWriting synchronizeFile];
-    [nodeStderrPipe_.fileHandleForReading synchronizeFile];
+    @try {
+      [nodeStderrPipe_.fileHandleForWriting synchronizeFile];
+      [nodeStderrPipe_.fileHandleForReading synchronizeFile];
+    } @catch (NSException *e) {
+    }
   }
 }
 
@@ -261,52 +289,75 @@ static NSDictionary *kInputStringAttributes,
   }
 }
 
-- (void)eval:(NSString*)script {
-  NSError *error;
-  
-  // Aquire reference to sys.inspect
-  if (kInspectFunction.IsEmpty()) {
-    HandleScope scope;
-    Local<Value> result = [NodeJS eval:@"require('util').inspect"
-                                origin:nil context:nil error:nil];
-    kInspectFunction =
-        Persistent<Function>::New(Local<Function>::Cast(result));
-  }
+- (void)eval:(NSString*)_script callback:(void(^)(void))callback {
+  NodeJSThread *nodeThread = [NodeJSThread mainNodeJSThread];
+  callback = [callback copy];
+  [nodeThread performBlock:^(NodeJSCallbackBlock maincall){
+    NSError *error;
+    
+    // Aquire reference to sys.inspect
+    if (kInspectFunction.IsEmpty()) {
+      HandleScope scope;
+      Local<Value> result = [NodeJS eval:@"require('util').inspect"
+                                  origin:nil context:nil error:nil];
+      kInspectFunction =
+          Persistent<Function>::New(Local<Function>::Cast(result));
+    }
 
-  // Prepare input
-  script = [script stringByTrimmingCharactersInSet:
-      [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-  if ([script length] == 0) return;
-  
-  // Save to history & reset history cursor
-  [self appendToInputHistory:script];
-  historyCursor_ = 0;
-  if (uncommitedHistoryEntry_)
-    self.uncommitedHistoryEntry = nil;
-  
-  // If the line starts with a '{' or '[' (or is a function) we need to wrap it
-  // in ( and ) for eval to function properly
-  unichar ch0 = [script characterAtIndex:0];
-  if (ch0 == '{' || ch0 == '[' || [script hasPrefix:@"function"]) {
-    script = [NSString stringWithFormat:@"(%@)", script];
-  }
-  
-  // result = eval(script)
-  HandleScope scope;
-  Local<Value> result =
-      [NodeJS eval:script origin:@"<input>" context:nil error:&error];
-  
-  // Handle result
-  if (result.IsEmpty()) {
-    NSLog(@"eval: %@", error);
-    [self appendLine:[error localizedDescription]
-          attributes:kErrorStringAttributes];
-  } else if (!result->IsUndefined()) {
-    result = kInspectFunction->Call(kInspectFunction, 1, &result);
-    String::Utf8Value utf8str(result->ToString());
-    [self appendLine:[NSString stringWithUTF8String:*utf8str]
-          attributes:kResultStringAttributes];
-  }
+    // Prepare input
+    NSString *script = [_script stringByTrimmingCharactersInSet:
+        [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if ([script length] == 0) {
+      maincall(^{
+        callback();
+        [callback release];
+      });
+      return;
+    }
+    
+    // Save to history & reset history cursor
+    maincall(^{
+      [self appendToInputHistory:script];
+      historyCursor_ = 0;
+      if (uncommitedHistoryEntry_)
+        self.uncommitedHistoryEntry = nil;
+    });
+    
+    // If the line starts with a '{' or '[' (or is a function) we need to wrap it
+    // in ( and ) for eval to function properly
+    unichar ch0 = [script characterAtIndex:0];
+    if (ch0 == '{' || ch0 == '[' || [script hasPrefix:@"function"]) {
+      script = [NSString stringWithFormat:@"(%@)", script];
+    }
+    
+    // result = eval(script)
+    HandleScope scope;
+    Local<Value> result =
+        [NodeJS eval:script origin:@"<input>" context:nil error:&error];
+    
+    // Handle result
+    if (result.IsEmpty()) {
+      if (error) [error retain];
+      maincall(^{
+        NSLog(@"eval: %@", error);
+        [self appendLine:[error localizedDescription]
+              attributes:kErrorStringAttributes];
+        if (error) [error release];
+        callback();
+        [callback release];
+      });
+    } else if (!result->IsUndefined()) {
+      result = kInspectFunction->Call(kInspectFunction, 1, &result);
+      String::Utf8Value utf8str(result->ToString());
+      NSString *str = [[NSString alloc] initWithUTF8String:*utf8str];
+      maincall(^{
+        [self appendLine:str attributes:kResultStringAttributes];
+        [str release];
+        callback();
+        [callback release];
+      });
+    }
+  }];
 }
 
 #pragma mark -
@@ -370,23 +421,63 @@ static NSDictionary *kInputStringAttributes,
       // check for a newline entry
       BOOL gotNewline = (rstrNLRange.location != NSNotFound);
       if (gotNewline) {
+      
+        void (^scrollToEndAndSelect)() = ^{
+          [[scrollView_ documentView] performSelector:@selector(scrollToEndOfDocument:) 
+                                           withObject:self
+                                           afterDelay:0.01];
+          [textView_ setSelectedRange:NSMakeRange(textStorage.length, 0)];
+        };
+        scrollToEndAndSelect = [scrollToEndAndSelect copy]; // FIXME release
+      
         // user performed at least one linebreak
         alowEdit = NO;
         NSString* strUpToLastNewline =
             [replacementString substringToIndex:rstrNLRange.location];
         if ([strUpToLastNewline length] > 0) {
           // user performed more than one line break.
-          // If something was pasted with multiple lines -- execute all
-          // text before the last new line.
-          [strUpToLastNewline enumerateLinesUsingBlock:^(NSString *line, BOOL *stop) {
-            [self appendLine:line attributes:kInputStringAttributes];
-            [self eval:line];
-            [textStorage appendAttributedString:[isa linePrefix]];
-          }];
-          if (rstrNLRange.location+1 < [replacementString length]) {
+          
+          // FIXME: this is broken...
+          void (^appendUnterminatedLastLine)() = ^{
             NSString* line =
                 [replacementString substringFromIndex:rstrNLRange.location+1];
             [self appendText:line attributes:kInputStringAttributes];
+          };
+          appendUnterminatedLastLine =
+              [appendUnterminatedLastLine copy]; // FIXME release
+          
+          // If something was pasted with multiple lines -- execute all
+          // text before the last new line.
+          NSArray *lines =
+              [strUpToLastNewline componentsSeparatedByCharactersInSet:
+                  [NSCharacterSet newlineCharacterSet]];
+          __block NSUInteger linecount = lines.count;
+          BOOL haveUnterminatedLastLine =
+              (rstrNLRange.location+1 < [replacementString length]);
+          if (linecount > 0) {
+            __block NSUInteger index = 0;
+            void (^handleNextLine)() = ^{
+              NSString* evalLine = [lines objectAtIndex:index++];
+              [self appendLine:evalLine attributes:kInputStringAttributes];
+              [self eval:evalLine callback:^{
+                [textStorage appendAttributedString:[isa linePrefix]];
+                if (index == linecount) {
+                  if (haveUnterminatedLastLine)
+                    appendUnterminatedLastLine();
+                  scrollToEndAndSelect();
+                  [handleNextLine release];
+                } else {
+                  scrollToEndAndSelect();
+                  handleNextLine();
+                }
+              }];
+            };
+            [handleNextLine copy];
+            handleNextLine();
+          } else {
+            if (haveUnterminatedLastLine)
+              appendUnterminatedLastLine();
+            scrollToEndAndSelect();
           }
         } else {
           // User entered only a single new line
@@ -394,13 +485,12 @@ static NSDictionary *kInputStringAttributes,
           NSString* evalLine =
               [[textStorage mutableString] substringFromIndex:linePrefixEnd];
           [self appendLine:nil attributes:kInputStringAttributes];
-          [self eval:evalLine];
-          [textStorage appendAttributedString:[isa linePrefix]];
+          [self eval:evalLine callback:^{
+            [textStorage appendAttributedString:[isa linePrefix]];
+            scrollToEndAndSelect();
+          }];
         }
-        [[scrollView_ documentView] performSelector:@selector(scrollToEndOfDocument:) 
-                                         withObject:self
-                                         afterDelay:0.01];
-        [textView_ setSelectedRange:NSMakeRange(textStorage.length, 0)];
+        // scrollToEndAndSelect()
       }
     }
   } else {
@@ -526,16 +616,31 @@ static v8::Handle<v8::Value> readdirCallback(const Arguments& args){
     }
   }
   
+  // Demonstrates performing blocks in different threads
+  NodeJSThread *nodeThread = [NodeJSThread mainNodeJSThread];
+  [nodeThread performBlock:^(NodeJSCallbackBlock callback){
+    // do stuff in node-land
+    NSLog(@"calling from node-land");
+    callback(^{
+      // and back in the original thread
+      NSLog(@"calling from cocoa-land");
+    });
+  }];
+  
   // Demonstrates using a NodeJSFunction wrapper, emitting an event on |process|
-  static NodeJSFunction *func = nil;
-  if (!func) {
-    func = [[NodeJSFunction functionFromString:
-        @"function emitKeyCode(keyCode){ process.emit('keyPress', keyCode) }"
-                                         error:nil] retain];
-  }
-  HandleScope scope;
-  Local<Value> argv[] = { v8::Integer::New([event keyCode]) };
-  [func callWithV8Arguments:argv count:1 error:nil];
+  int keyCode = [event keyCode];
+  [nodeThread performBlock:^(NodeJSCallbackBlock callback){
+    HandleScope scope;
+    static NodeJSFunction *func = nil;
+    if (!func) {
+      func = [[NodeJSFunction functionFromString:
+          @"function emitKeyCode(keyCode){ process.emit('keyPress', keyCode) }"
+                                           error:nil] retain];
+    }
+    Local<Value> argv[] = { v8::Integer::New(keyCode) };
+    [func callWithV8Arguments:argv count:1 error:nil];
+    NSLog(@"called");
+  }];
   
   //[self _testAsync];
   
